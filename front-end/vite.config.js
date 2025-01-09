@@ -6,7 +6,9 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': 'https://papaya-centaur-ec5c34.netlify.app/',
+      '/api': 'https://papaya-centaur-ec5c34.netlify.app'
+
+
     },
   },
 })
