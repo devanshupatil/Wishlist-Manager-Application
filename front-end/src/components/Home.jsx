@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from 'react';
 import toast from "react-hot-toast";
 
 const Home = () => {
-
   const [items, setItems] = useState([]);
   const addItemFormRef = useRef(null);
   const searchInputRef = useRef(null);
@@ -11,133 +10,94 @@ const Home = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-
         const response = await fetch('/api/products');
         const data = await response.json();
-
         setItems(data);
       } catch (error) {
-
         console.error('Error fetching products:', error);
-
       }
     };
-
     fetchProducts();
   }, []);
 
   const handleRefresh = async () => {
-
-      try {
-  
-        const response = await fetch('/api/products');
-        const data = await response.json();
-  
-        setItems(data);
-      } catch (error) {
-  
-        console.error('Error fetching products:', error);
-  
-      }
-    
+    try {
+      const response = await fetch('/api/products');
+      const data = await response.json();
+      setItems(data);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    }
   };
 
-const handleDelete = async (id) => {
-  try {
-
-    const response = await fetch(`/api/products/${id}`, {
-      method: 'DELETE',
-    });
-
-    if (response.ok) {
-
-      setItems(items.filter(item => item._id !== id));
-      toast.success('Product deleted successfully');
-
-    } else {
-
-      toast.error('Failed to delete product');
-
-    }
-  } catch (error) {
-
-    console.error('Error deleting product:', error);
-    toast.error('An error occurred while deleting the product');
-  }
-};
-
-const handleUpdate = async (id) => {
-  try {
-
-    const itemToUpdate = items.find(item => item._id === id);
-
-    if (!itemToUpdate) {
-      
-      toast.error('Item not found');
-      return;
-    }
-
-    // Populate the 'add new item card' inputs with the item data
-    addItemFormRef.current.querySelector('input[name="name"]').value = itemToUpdate.name;
-    addItemFormRef.current.querySelector('input[name="productUrl"]').value = itemToUpdate.productUrl;
-    addItemFormRef.current.querySelector('input[name="currentPrice"]').value = itemToUpdate.currentPrice;
-    addItemFormRef.current.querySelector('input[name="targetPrice"]').value = itemToUpdate.targetPrice;
-    addItemFormRef.current.querySelector('textarea[name="description"]').value = itemToUpdate.description;
-    addItemFormRef.current.querySelector('select[name="category"]').value = itemToUpdate.category;
-
-    // Scroll to the 'add new item card'
-    addItemFormRef.current.scrollIntoView({ behavior: 'smooth' });
-
-    // Update the form submission handler to use PUT instead of POST
-    const originalSubmit = addItemFormRef.current.onsubmit;
-    addItemFormRef.current.onsubmit = async (e) => {
-      e.preventDefault();
-      const formData = new FormData(e.target);
-      const updatedData = Object.fromEntries(formData.entries());
-
+  const handleDelete = async (id) => {
+    try {
       const response = await fetch(`/api/products/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedData),
+        method: 'DELETE',
       });
-
       if (response.ok) {
-        const updatedProduct = await response.json();
-        setItems(items.map(item => item._id === id ? updatedProduct : item));
-        toast.success('Product updated successfully');
-        // Reset form and its submit handler
-        e.target.reset();
-        addItemFormRef.current.onsubmit = originalSubmit;
+        setItems(items.filter(item => item._id !== id));
+        toast.success('Product deleted successfully');
       } else {
-        toast.error('Failed to update product');
+        toast.error('Failed to delete product');
       }
-    };
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      toast.error('An error occurred while deleting the product');
+    }
+  };
 
-    toast.success('Item loaded for update. Make changes and submit to update.');
-  } catch (error) {
-    console.error('Error preparing update:', error);
-    toast.error('An error occurred while preparing the update');
-  }
-};
-
-
-  
+  const handleUpdate = async (id) => {
+    try {
+      const itemToUpdate = items.find(item => item._id === id);
+      if (!itemToUpdate) {
+        toast.error('Item not found');
+        return;
+      }
+      addItemFormRef.current.querySelector('input[name="name"]').value = itemToUpdate.name;
+      addItemFormRef.current.querySelector('input[name="productUrl"]').value = itemToUpdate.productUrl;
+      addItemFormRef.current.querySelector('input[name="currentPrice"]').value = itemToUpdate.currentPrice;
+      addItemFormRef.current.querySelector('input[name="targetPrice"]').value = itemToUpdate.targetPrice;
+      addItemFormRef.current.querySelector('textarea[name="description"]').value = itemToUpdate.description;
+      addItemFormRef.current.querySelector('select[name="category"]').value = itemToUpdate.category;
+      addItemFormRef.current.scrollIntoView({ behavior: 'smooth' });
+      const originalSubmit = addItemFormRef.current.onsubmit;
+      addItemFormRef.current.onsubmit = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const updatedData = Object.fromEntries(formData.entries());
+        const response = await fetch(`/api/products/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updatedData),
+        });
+        if (response.ok) {
+          const updatedProduct = await response.json();
+          setItems(items.map(item => item._id === id ? updatedProduct : item));
+          toast.success('Product updated successfully');
+          e.target.reset();
+          addItemFormRef.current.onsubmit = originalSubmit;
+        } else {
+          toast.error('Failed to update product');
+        }
+      };
+      toast.success('Item loaded for update. Make changes and submit to update.');
+    } catch (error) {
+      console.error('Error preparing update:', error);
+      toast.error('An error occurred while preparing the update');
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = addItemFormRef.current;
-
     if (!form.checkValidity()) {
       form.reportValidity();
       return;
     }
-
     const formData = new FormData(form);
-    console.log("fromData", formData);
-
-    // Validate all required fields are present
     const newItem = {
       name: formData.get('name') || '',
       productUrl: formData.get('productUrl') || '',
@@ -147,14 +107,10 @@ const handleUpdate = async (id) => {
       category: formData.get('category') || '',
       priority: formData.get('priority') || ''
     };
-
-  
-    // Validate the data before sending
     if (!newItem.name || !newItem.productUrl) {
       toast.error('Please fill in all required fields');
       return;
     }
-
     try {
       const response = await fetch('/api/products', {
         method: 'POST',
@@ -163,18 +119,15 @@ const handleUpdate = async (id) => {
         },
         body: JSON.stringify(newItem)
       });
-
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
       const data = await response.json();
       setItems(prevItems => [...prevItems, data]);
       form.reset();
       toast.success('Item added successfully!');
     } catch (error) {
       console.error('Error adding item:', error);
-     
     }
   };
 
@@ -187,21 +140,23 @@ const handleUpdate = async (id) => {
   const handleSort = () => {
     const sortOption = sortSelectRef.current.value;
     let sortedItems = [...items];
-
     if (sortOption === 'date') {
       sortedItems.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     } else if (sortOption === 'price') {
       sortedItems.sort((a, b) => a.currentPrice - b.currentPrice);
     }
-
     setItems(sortedItems);
   };
 
-  // Render items list
   const itemsList = items.map(item => (
-
-    <div key={item._id} className="item-card bg-white shadow-lg rounded-lg p-6 mb-6">
-      <div className="flex justify-end mt-4">
+    <div key={item._id} className={`item-card bg-white shadow-lg rounded-lg p-6 mb-6 ${item.currentPrice <= item.targetPrice ? 'border-green-500 border-2' : ''}`}>
+      {item.currentPrice <= item.targetPrice && (
+        <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded-r" role="alert">
+          <p className="font-bold">Great news!</p>
+          <p>The price has reached or dropped below your target. It&apos;s time to make your purchase!</p>
+        </div>
+      )}
+      <div className="flex justify-end mb-4">
         <button
           onClick={() => handleUpdate(item._id)}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
@@ -215,12 +170,10 @@ const handleUpdate = async (id) => {
           Delete
         </button>
       </div>
-
       <h3 className="item-name text-lg font-bold text-gray-900 mb-2">Product Name: {item.name}</h3>
-      {/* <p>Product Id: {item._id}</p> */}
       <p className="item-url text-blue-500 mb-2">
-        <a href={item.productUrl} target="_blank" rel="noopener noreferrer" className="hover:underline">Product URL:
-          {item.productUrl}
+        <a href={item.productUrl} target="_blank" rel="noopener noreferrer" className="hover:underline text-blue-500 mb-2">
+          Product URL: <span className="truncate inline-block max-w-full">{item.productUrl}</span>
         </a>
       </p>
       <p className="item-current-price text-gray-700 mb-1">Current Price: <span className="font-semibold">${item.currentPrice}</span></p>
@@ -229,17 +182,13 @@ const handleUpdate = async (id) => {
       <p className="item-category text-gray-700 mb-1">Category: <span className="font-semibold">{item.category}</span></p>
       <p className="item-priority text-gray-700">Priority: <span className="font-semibold">{item.priority}</span></p>
       <p className="item-created-at text-gray-700">Created At: <span className="font-semibold">{item.createdAt}</span></p>
-
     </div>
-  ));
-
-  // console.log("Items array:", items);
-  // console.log("Unique _id values:", [...new Set(items.map(item => item._id))]);
+  ))
+  
 
   return (
     <div className="container mx-auto max-w-4xl px-4 py-6">
       <h1 className="text-3xl font-bold text-center mb-6">Wishlist Manager</h1>
-      {/* Add Item Form */}
       <div className="bg-white border border-gray-300 shadow-md rounded-lg p-10 mb-12">
         <h5 className="text-xl font-semibold mb-4 text-center">Add New Item</h5>
         <form ref={addItemFormRef} className="space-y-4" onSubmit={(e) => {
@@ -251,7 +200,7 @@ const handleUpdate = async (id) => {
               type="text"
               className="w-full px-3 py-2 border rounded"
               id="productName"
-              name="name"  // Added name attribute
+              name="name"
               placeholder="Product Name"
               required
             />
@@ -259,7 +208,7 @@ const handleUpdate = async (id) => {
               type="url"
               className="w-full px-3 py-2 border rounded"
               id="productUrl"
-              name="productUrl"  // Added name attribute
+              name="productUrl"
               placeholder="Amazon URL"
               required
             />
@@ -269,7 +218,7 @@ const handleUpdate = async (id) => {
               type="number"
               className="w-full px-3 py-2 border rounded"
               id="currentPrice"
-              name="currentPrice"  // Added name attribute
+              name="currentPrice"
               placeholder="Current Price"
               step="0.01"
               required
@@ -278,14 +227,14 @@ const handleUpdate = async (id) => {
               type="number"
               className="w-full px-3 py-2 border rounded"
               id="targetPrice"
-              name="targetPrice"  // Added name attribute
+              name="targetPrice"
               placeholder="Target Price"
               step="0.01"
             />
             <select
               className="w-full px-3 py-2 border rounded"
               id="priority"
-              name="priority"  // Added name attribute
+              name="priority"
               required
             >
               <option value="">Select Priority</option>
@@ -298,7 +247,7 @@ const handleUpdate = async (id) => {
             <select
               className="w-full px-3 py-2 border rounded"
               id="category"
-              name="category"  // Added name attribute
+              name="category"
               required
             >
               <option value="">Select Category</option>
@@ -308,7 +257,7 @@ const handleUpdate = async (id) => {
             <textarea
               className="w-full px-3 py-2 border rounded"
               id="notes"
-              name="description"  // Added name attribute
+              name="description"
               placeholder="Notes (optional)"
             ></textarea>
           </div>
@@ -320,7 +269,6 @@ const handleUpdate = async (id) => {
           </button>
         </form>
       </div>
-      {/* Search and Sort Controls */}
       <div className="grid md:grid-cols-2 gap-4 mb-6">
         <input
           type="text"
@@ -343,7 +291,6 @@ const handleUpdate = async (id) => {
           <option value="price">Sort by Price</option>
         </select>
       </div>
-      {/* Items List */}
       <div className="bg-white shadow-md rounded-lg p-6 border border-gray-300">
         <div className="flex justify-between items-center mb-4">
           <h5 className="text-xl font-semibold">Your Wishlist Items</h5>
