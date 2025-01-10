@@ -21,10 +21,10 @@ Simplified Amazon Wishlist Manager (Student Level Project)
 
 ## Technical Stack:
 
-1. Java Backend with Spring Boot
-2. Simple REST APIs
-3. Basic database (MySQL/PostgreSQL)
-4. Simple frontend (HTML/CSS/JavaScript)
+1. Django/Python
+2. GraphQL APIs
+3. Basic database (MongoDB)
+4. Simple frontend (Angular)
 
 ## Basic Operations:
 
