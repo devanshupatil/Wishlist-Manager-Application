@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': 'https://localhost:4000'
+      '/api': 'https://wishlist-manager-application.onrender.com'
 
 
     },
