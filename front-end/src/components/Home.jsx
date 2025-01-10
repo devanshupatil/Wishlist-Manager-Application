@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import toast from "react-hot-toast";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Home = () => {
   const [items, setItems] = useState([]);
@@ -10,7 +11,7 @@ const Home = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('/api/products');
+        const response = await fetch(`${API_URL}/api/products`);
         const data = await response.json();
         setItems(data);
       } catch (error) {
@@ -22,7 +23,7 @@ const Home = () => {
 
   const handleRefresh = async () => {
     try {
-      const response = await fetch('/api/products');
+      const response = await fetch(`${API_URL}/api/products`);
       const data = await response.json();
       setItems(data);
     } catch (error) {
@@ -32,7 +33,7 @@ const Home = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`/api/products/${id}`, {
+      const response = await fetch(`${API_URL}/api/products/${id}`, {
         method: 'DELETE',
       });
       if (response.ok) {
@@ -66,7 +67,7 @@ const Home = () => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const updatedData = Object.fromEntries(formData.entries());
-        const response = await fetch(`/api/products/${id}`, {
+        const response = await fetch(`${API_URL}/api/products/${id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -112,7 +113,7 @@ const Home = () => {
       return;
     }
     try {
-      const response = await fetch('/api/products', {
+      const response = await fetch(`${API_URL}/api/products`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
