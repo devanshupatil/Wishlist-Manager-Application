@@ -1,9 +1,7 @@
-
 import { useState } from 'react';
-
+import { toast } from 'react-hot-toast';
 
 const ForgotPass = () => {
-  
   const [email, setEmail] = useState('');
   const [error, setError] = useState(null);
 
@@ -13,6 +11,7 @@ const ForgotPass = () => {
 
     if (!emailInput) {
       setError('Please enter your email address');
+      toast.error('Please enter your email address');
       return;
     }
     setEmail(emailInput);
@@ -30,13 +29,15 @@ const ForgotPass = () => {
       const data = await response.json();
       if (!response.ok) {
         setError(data.error);
+        toast.error(data.error);
       } else {
         setError(null);
-        alert('Password reset email sent!');
+        toast.success('Password reset email sent!');
       }
     } catch (err) {
       console.error(err);
       setError('Something went wrong. Please try again later.');
+      toast.error('Something went wrong. Please try again later.');
     }
   };
 
@@ -73,6 +74,5 @@ const ForgotPass = () => {
     </main>
   );
 };
+
 export default ForgotPass;
-
-

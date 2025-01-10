@@ -1,40 +1,45 @@
 import { useState } from 'react';
+import { toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-
     e.preventDefault();
 
-    const response = await fetch('/api/register', {
-      method: 'POST',
-      headers: {
+    if (password !== passwordConfirmation) {
+      toast.error('Passwords do not match');
+      return;
+    }
 
-        'Content-Type': 'application/json',
+    try {
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          password
+        }),
+      });
+      const data = await response.json();
 
-      },
-
-      body: JSON.stringify({
-        name,
-        email,
-        password
-      }),
-
-    });
-    const data = await response.json();
-
-    if (response.ok) {
-
-      window.location.href = '/';
-
-    } else {
-
-      alert(data.error);
-
+      if (response.ok) {
+        toast.success('Account created successfully');
+        navigate('/');
+      } else {
+        toast.error(data.error || 'Failed to create account');
+      }
+    } catch (error) {
+      console.error('Error during signup:', error);
+      toast.error('An error occurred. Please try again.');
     }
   };
 
@@ -163,4 +168,3 @@ const Signup = () => {
 };
 
 export default Signup;
-
