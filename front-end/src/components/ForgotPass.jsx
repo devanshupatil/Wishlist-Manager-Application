@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
+const API_URL = import.meta.env.VITE_API_URL;
 
 const ForgotPass = () => {
   const [email, setEmail] = useState('');
@@ -18,7 +19,7 @@ const ForgotPass = () => {
     setError(null);
 
     try {
-      const response = await fetch('/api/password', {
+      const response = await fetch(`${API_URL}/api/password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
