@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Signup = () => {
   const [name, setName] = useState('');
@@ -18,7 +19,7 @@ const Signup = () => {
     }
 
     try {
-      const response = await fetch('/api/register', {
+      const response = await fetch(`${API_URL}/api/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -29,6 +30,7 @@ const Signup = () => {
           password
         }),
       });
+      console.log("response", response);
       const data = await response.json();
 
       if (response.ok) {
