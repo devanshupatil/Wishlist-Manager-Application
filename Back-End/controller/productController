@@ -1,4 +1,4 @@
-const Product = require('../models/productModels');
+
 
 const getProducts = async (req, res, next) => {
 
@@ -122,7 +122,24 @@ const sortByPrice = async (req, res) => {
     }
 }
 
+const filterByPriority = async (req, res) => {
+    try {
+        const { priority } = req.params;
+        const validPriorities = ['High', 'Medium', 'Low'];
+        
+        if (!validPriorities.includes(priority)) {
+            return res.status(400).send("Invalid priority. Must be High, Medium, or Low.");
+        }
+
+        const products = await Product.find({ priority });
+        res.status(200).json(products);
+    } catch (error) {
+        res.status(500).send("Server Error");
+    }
+}
+
+
 module.exports = {
-    getProducts, createProduct, updateProduct, deleteProduct, searchProduct, sortByDate, sortByPrice
+    getProducts, createProduct, updateProduct, deleteProduct, searchProduct, sortByDate, sortByPrice, filterByPriority
 }
 

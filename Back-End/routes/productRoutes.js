@@ -4,6 +4,7 @@ const {getProducts, createProduct, updateProduct, deleteProduct} = require('../c
 const { searchProduct } = require('../controller/productController');
 const { sortByDate } = require('../controller/productController');
 const { sortByPrice } = require('../controller/productController');
+const { filterByPriority } = require('../controller/productController');
 
 
 router.get('/products', getProducts);
@@ -19,6 +20,8 @@ router.get('/products/search/:name', searchProduct);
 router.get('/products/search/:name', sortByDate);
 
 router.get('/products/search/:name', sortByPrice);
+
+router.get('/products/search/:name', filterByPriority);
 
 
 
