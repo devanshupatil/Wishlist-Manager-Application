@@ -1,9 +1,9 @@
 const express = require('express')
 const app = express()
 const dotenv = require('dotenv');
-const port = process.env.PORT
+const supabase = require('./config/db');
+const port = 4001
 const productRouter = require('./routes/productRoutes');
-const userRouter = require('./routes/userRoutes');
 const cors = require('cors');
 
 
@@ -27,11 +27,9 @@ app.use(cors({
 }));
 
 // Routes
-app.use('/api', productRouter, userRouter);
+app.use('/api', productRouter);
 
 // Start server
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
-
-
