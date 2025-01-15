@@ -34,7 +34,7 @@ const authMiddleware = async (req, res, next) => {
       // Add the user ID to the request object
       // In Supabase, the user ID is in the 'sub' claim
       req.userId = decoded.sub;
-
+      
       // Add role if needed (optional)
       // req.userRole = decoded.role;
 

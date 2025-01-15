@@ -7,6 +7,9 @@ const { sortByPrice } = require('../controller/productController');
 const { filterByPriority } = require('../controller/productController');
 const {createProduct} = require('../controller/productController');
 
+const verifyToken  = require('../middleware/auth');
+
+router.use(verifyToken);
 
 router.get('/products', getProducts);
 

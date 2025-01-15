@@ -1,12 +1,11 @@
-const supabase = require('../config/db.js');
+const products = require('../models/productModels.js');
 
 const getProducts = async (req, res) => {
+    
+    console.log('userId:', req.userId);
     try {
-        const { data: allProducts, error } = await supabase
-            .from('products')
-            .select('*');
+        const allProducts = await products.getById(req.userId);
 
-        if (error) throw error;
 
         if (!allProducts || allProducts.length === 0) {
             return res.status(404).json({ message: "Products not found" });
