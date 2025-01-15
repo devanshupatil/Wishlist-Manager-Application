@@ -2,10 +2,11 @@ import { useState, useRef, useEffect } from 'react';
 import toast from "react-hot-toast";
 import { supabase } from '../config/supabase';
 // import { useNavigate } from 'react-router-dom';
-const API_URL = import.meta.env.VITE_API_URL;
+// const API_URL = import.meta.env.VITE_API_URL;
 
 const Home = () => {
   const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(false);
   // const [profile, setProfile] = useState('');
   const addItemFormRef = useRef(null);
   const searchInputRef = useRef(null);
@@ -16,7 +17,7 @@ const Home = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/products`, {
+        const response = await fetch(`/api/products`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -54,7 +55,7 @@ const Home = () => {
 
   const handleRefresh = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/products`, {
+      const response = await fetch(`/api/products`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -74,7 +75,7 @@ const Home = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`${API_URL}/api/products/`, {
+      const response = await fetch(`/api/products/`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -113,7 +114,7 @@ const Home = () => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const updatedData = Object.fromEntries(formData.entries());
-        const response = await fetch(`${API_URL}/api/products/${id}`, {
+        const response = await fetch(`/api/products/${id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -161,7 +162,7 @@ const Home = () => {
     }
     try {
       console.log("token", token);
-      const response = await fetch(`${API_URL}/api/products`, {
+      const response = await fetch(`/api/products`, {
         method: 'POST',
         headers: {
           // 'Content-Type': 'application/json',
@@ -238,10 +239,13 @@ const Home = () => {
 
   const handleLogout = async () => {
     try {
+      setLoading(true);
       await supabase.auth.signOut();
       localStorage.removeItem('sb-phijictojbnypvqnixkd-auth-token');
     } catch (error) {
       console.error('Error logging out:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -259,6 +263,7 @@ const Home = () => {
             className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
           >
             Logout
+            {loading && <span className="ml-2">Logging out...</span>}
           </button>
         </div>
       </div>
