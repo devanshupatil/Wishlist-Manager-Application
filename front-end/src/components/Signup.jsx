@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-const API_URL = import.meta.env.VITE_API_URL;
+// import {useAuth} from '../contexts/AuthContex'
+import { supabase } from '../config/supabase';
+
 
 const Signup = () => {
   const [name, setName] = useState('');
@@ -9,6 +11,7 @@ const Signup = () => {
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const navigate = useNavigate();
+  // const {signUp} = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,25 +22,23 @@ const Signup = () => {
     }
 
     try {
-      const response = await fetch(`${API_URL}/api/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          password
-        }),
+      
+      const response = await supabase.auth.signUp({
+        email,
+        password,
       });
-      console.log("response", response);
-      const data = await response.json();
 
-      if (response.ok) {
-        toast.success('Account created successfully');
-        navigate('/');
+      if (response.error) {
+
+        toast.error(response.error.message);
+
       } else {
-        toast.error(data.error || 'Failed to create account');
+
+        toast.success('Signup successful');
+
+        alert('Please check your email to verify your account.');
+
+        navigate('/');
       }
     } catch (error) {
       console.error('Error during signup:', error);

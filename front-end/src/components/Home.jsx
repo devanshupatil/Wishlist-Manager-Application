@@ -1,17 +1,30 @@
 import { useState, useRef, useEffect } from 'react';
 import toast from "react-hot-toast";
+import { supabase } from '../config/supabase';
+// import { useNavigate } from 'react-router-dom';
 const API_URL = import.meta.env.VITE_API_URL;
 
 const Home = () => {
   const [items, setItems] = useState([]);
+  // const [profile, setProfile] = useState('');
   const addItemFormRef = useRef(null);
   const searchInputRef = useRef(null);
   const sortSelectRef = useRef(null);
+ 
+  const token = localStorage.getItem('sb-phijictojbnypvqnixkd-auth-token');
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/products`);
+
+
+        // console.log("toklen", token);
+        const response = await fetch(`${API_URL}/api/products`,{
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        console.log("response", response);
         const data = await response.json();
         setItems(data);
       } catch (error) {
@@ -19,11 +32,30 @@ const Home = () => {
       }
     };
     fetchProducts();
-  }, []);
+    // fetchProfile();
+  }, [token]);
+
+  // const fetchProfile = async () => {
+  //   const { data: { user } } = await supabase.auth.getUser();
+  //   if (user) {
+  //     const { data, error } = await supabase.auth.getUser();
+
+  //     if (error) {
+  //       console.error('Error fetching profile:', error);
+  //     } else {
+  //       setProfile(data);
+  //     }
+  //   }
+  // };
+  
 
   const handleRefresh = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/products`);
+      const response = await fetch(`${API_URL}/api/products`,{
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       const data = await response.json();
       setItems(data);
     } catch (error) {
@@ -33,8 +65,13 @@ const Home = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`${API_URL}/api/products/${id}`, {
+      const response = await fetch(`${API_URL}/api/products/`, {
         method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ id }),
       });
       if (response.ok) {
         setItems(items.filter(item => item._id !== id));
@@ -71,6 +108,7 @@ const Home = () => {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify(updatedData),
         });
@@ -113,10 +151,12 @@ const Home = () => {
       return;
     }
     try {
+      console.log("token", token);
       const response = await fetch(`${API_URL}/api/products`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(newItem)
       });
@@ -184,12 +224,41 @@ const Home = () => {
       <p className="item-priority text-gray-700">Priority: <span className="font-semibold">{item.priority}</span></p>
       <p className="item-created-at text-gray-700">Created At: <span className="font-semibold">{item.createdAt}</span></p>
     </div>
-  ))
-  
+  ));
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      localStorage.removeItem('sb-phijictojbnypvqnixkd-auth-token');
+      // navigate('/', { replace: true });
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
 
   return (
+
+    <div>
+        <div className="flex">
+        <div className="w-1/4 bg-gray-100 p-4 mr-4 rounded-lg shadow-md">
+          <h2 className="text-xl font-bold mb-4">Profile</h2>
+          <div className="mb-4">
+            <p className="font-semibold">Name: <span className="font-normal">John Doe</span></p>
+            <p className="font-semibold">Email: <span className="font-normal">johndoe@example.com</span></p>
+          </div>
+          <button 
+            onClick={handleLogout} 
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Logout
+          </button>
+        </div>
+        </div>
+  
+
     <div className="container mx-auto max-w-4xl px-4 py-6">
       <h1 className="text-3xl font-bold text-center mb-6">Wishlist Manager</h1>
+      
       <div className="bg-white border border-gray-300 shadow-md rounded-lg p-10 mb-12">
         <h5 className="text-xl font-semibold mb-4 text-center">Add New Item</h5>
         <form ref={addItemFormRef} className="space-y-4" onSubmit={(e) => {
@@ -306,6 +375,7 @@ const Home = () => {
           {itemsList}
         </div>
       </div>
+    </div>
     </div>
   );
 };

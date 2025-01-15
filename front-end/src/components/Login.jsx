@@ -1,37 +1,51 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-const API_URL = import.meta.env.VITE_API_URL;
+import { supabase } from '../config/supabase';
+import { useEffect } from 'react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+ 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+
     try {
-      const response = await fetch(`${API_URL}/api/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
+      const {error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (error) {
+        toast.error(error.message || 'Login failed');
+        console.error('Login error:', email, password);
+      } else {
         toast.success('Login successful');
         navigate('/home', { replace: true });
-      } else {
-        toast.error(data.error || 'Login failed');
       }
     } catch (error) {
       console.error('Error logging in:', error);
       toast.error('An error occurred. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        navigate('/home', { replace: true });
+      }
+    };
+    checkSession();
+  }, [navigate]);
+
 
   return (
     <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
@@ -54,6 +68,7 @@ const Login = () => {
                     placeholder="Email address"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    disabled={loading}
                   />
                   <label htmlFor="email" className="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">
                     Email Address
@@ -69,14 +84,15 @@ const Login = () => {
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    disabled={loading}
                   />
                   <label htmlFor="password" className="absolute left-0 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">
                     Password
                   </label>
                 </div>
                 <div className="relative">
-                  <button className="bg-cyan-500 text-white rounded-md px-2 py-1" onClick={handleSubmit}>
-                    Submit
+                  <button className="bg-cyan-500 text-white rounded-md px-2 py-1" onClick={handleSubmit} disabled={loading}>
+                    {loading ? 'Logging in...' : 'Submit'}
                   </button>
                 </div>
                 <div className="flex justify-between space-x-4">

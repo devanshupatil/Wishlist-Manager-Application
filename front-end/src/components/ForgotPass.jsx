@@ -1,44 +1,35 @@
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-const API_URL = import.meta.env.VITE_API_URL;
+import { supabase } from '../config/supabase';
 
 const ForgotPass = () => {
   const [email, setEmail] = useState('');
-  const [error, setError] = useState(null);
+  // const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const emailInput = e.target.elements.email.value;
 
     if (!emailInput) {
-      setError('Please enter your email address');
       toast.error('Please enter your email address');
       return;
     }
-    setEmail(emailInput);
-    setError(null);
+
+    // setEmail(emailInput);
+    // setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_URL}/api/password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await response.json();
-      if (!response.ok) {
-        setError(data.error);
-        toast.error(data.error);
+      const { error } = await supabase.auth.resetPasswordForEmail(email);
+      if (error) {
+        toast.error(error.message);
       } else {
-        setError(null);
-        toast.success('Password reset email sent!');
+        toast.success('Password reset email sent successfully');
       }
     } catch (err) {
       console.error(err);
-      setError('Something went wrong. Please try again later.');
       toast.error('Something went wrong. Please try again later.');
+    } finally {
+      // setIsLoading(false);
     }
   };
 
@@ -62,9 +53,12 @@ const ForgotPass = () => {
                 <div>
                   <label htmlFor="email" className="block text-sm font-bold ml-1 mb-2 dark:text-white">Email address</label>
                   <div className="relative">
-                    <input type="email" id="email" name="email" className="py-3 px-4 block w-full border-2 border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 shadow-sm" required aria-describedby="email-error" />
+                    <input type="email" id="email" name="email" 
+                    onChange={(e) => setEmail(e.target.value)}
+                    value={email}
+                    className="py-3 px-4 block w-full border-2 border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 shadow-sm" required aria-describedby="email-error" />
                   </div>
-                  {error && <p className="text-xs text-red-600 mt-2" id="email-error">{error}</p>}
+                  {/* {error && <p className="text-xs text-red-600 mt-2" id="email-error">{error}</p>} */}
                 </div>
                 <button type="submit" className="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800">Reset password</button>
               </div>
