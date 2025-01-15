@@ -16,19 +16,22 @@ const Home = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-
-
-        // console.log("toklen", token);
-        const response = await fetch(`${API_URL}/api/products`,{
+        const response = await fetch(`${API_URL}/api/products`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
         console.log("response", response);
         const data = await response.json();
-        setItems(data);
+        if (Array.isArray(data)) {
+          setItems(data);
+        } else {
+          console.error('Fetched data is not an array:', data);
+          setItems([]);
+        }
       } catch (error) {
         console.error('Error fetching products:', error);
+        setItems([]);
       }
     };
     fetchProducts();
@@ -51,15 +54,21 @@ const Home = () => {
 
   const handleRefresh = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/products`,{
+      const response = await fetch(`${API_URL}/api/products`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
       const data = await response.json();
-      setItems(data);
+      if (Array.isArray(data)) {
+        setItems(data);
+      } else {
+        console.error('Fetched data is not an array:', data);
+        setItems([]);
+      }
     } catch (error) {
       console.error('Error fetching products:', error);
+      setItems([]);
     }
   };
 
@@ -169,6 +178,7 @@ const Home = () => {
       toast.success('Item added successfully!');
     } catch (error) {
       console.error('Error adding item:', error);
+      toast.error('Failed to add item');
     }
   };
 
@@ -189,7 +199,7 @@ const Home = () => {
     setItems(sortedItems);
   };
 
-  const itemsList = items.map(item => (
+  const itemsList = Array.isArray(items) ? items.map(item => (
     <div key={item._id} className={`item-card bg-white shadow-lg rounded-lg p-6 mb-6 ${item.currentPrice <= item.targetPrice ? 'border-green-500 border-2' : ''}`}>
       {item.currentPrice <= item.targetPrice && (
         <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded-r" role="alert">
@@ -224,22 +234,20 @@ const Home = () => {
       <p className="item-priority text-gray-700">Priority: <span className="font-semibold">{item.priority}</span></p>
       <p className="item-created-at text-gray-700">Created At: <span className="font-semibold">{item.createdAt}</span></p>
     </div>
-  ));
+  )) : null;
 
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
       localStorage.removeItem('sb-phijictojbnypvqnixkd-auth-token');
-      // navigate('/', { replace: true });
     } catch (error) {
       console.error('Error logging out:', error);
     }
   };
 
   return (
-
     <div>
-        <div className="flex">
+      <div className="flex">
         <div className="w-1/4 bg-gray-100 p-4 mr-4 rounded-lg shadow-md">
           <h2 className="text-xl font-bold mb-4">Profile</h2>
           <div className="mb-4">
@@ -253,129 +261,128 @@ const Home = () => {
             Logout
           </button>
         </div>
-        </div>
-  
+      </div>
 
-    <div className="container mx-auto max-w-4xl px-4 py-6">
-      <h1 className="text-3xl font-bold text-center mb-6">Wishlist Manager</h1>
-      
-      <div className="bg-white border border-gray-300 shadow-md rounded-lg p-10 mb-12">
-        <h5 className="text-xl font-semibold mb-4 text-center">Add New Item</h5>
-        <form ref={addItemFormRef} className="space-y-4" onSubmit={(e) => {
-          handleSubmit(e);
-          toast.success('Item added successfully!');
-        }}>
-          <div className="grid md:grid-cols-2 gap-4">
-            <input
-              type="text"
-              className="w-full px-3 py-2 border rounded"
-              id="productName"
-              name="name"
-              placeholder="Product Name"
-              required
-            />
-            <input
-              type="url"
-              className="w-full px-3 py-2 border rounded"
-              id="productUrl"
-              name="productUrl"
-              placeholder="Amazon URL"
-              required
-            />
-          </div>
-          <div className="grid md:grid-cols-3 gap-4">
-            <input
-              type="number"
-              className="w-full px-3 py-2 border rounded"
-              id="currentPrice"
-              name="currentPrice"
-              placeholder="Current Price"
-              step="0.01"
-              required
-            />
-            <input
-              type="number"
-              className="w-full px-3 py-2 border rounded"
-              id="targetPrice"
-              name="targetPrice"
-              placeholder="Target Price"
-              step="0.01"
-            />
-            <select
-              className="w-full px-3 py-2 border rounded"
-              id="priority"
-              name="priority"
-              required
+      <div className="container mx-auto max-w-4xl px-4 py-6">
+        <h1 className="text-3xl font-bold text-center mb-6">Wishlist Manager</h1>
+        
+        <div className="bg-white border border-gray-300 shadow-md rounded-lg p-10 mb-12">
+          <h5 className="text-xl font-semibold mb-4 text-center">Add New Item</h5>
+          <form ref={addItemFormRef} className="space-y-4" onSubmit={(e) => {
+            handleSubmit(e);
+            toast.success('Item added successfully!');
+          }}>
+            <div className="grid md:grid-cols-2 gap-4">
+              <input
+                type="text"
+                className="w-full px-3 py-2 border rounded"
+                id="productName"
+                name="name"
+                placeholder="Product Name"
+                required
+              />
+              <input
+                type="url"
+                className="w-full px-3 py-2 border rounded"
+                id="productUrl"
+                name="productUrl"
+                placeholder="Amazon URL"
+                required
+              />
+            </div>
+            <div className="grid md:grid-cols-3 gap-4">
+              <input
+                type="number"
+                className="w-full px-3 py-2 border rounded"
+                id="currentPrice"
+                name="currentPrice"
+                placeholder="Current Price"
+                step="0.01"
+                required
+              />
+              <input
+                type="number"
+                className="w-full px-3 py-2 border rounded"
+                id="targetPrice"
+                name="targetPrice"
+                placeholder="Target Price"
+                step="0.01"
+              />
+              <select
+                className="w-full px-3 py-2 border rounded"
+                id="priority"
+                name="priority"
+                required
+              >
+                <option value="">Select Priority</option>
+                <option value="HIGH">High</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="LOW">Low</option>
+              </select>
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              <select
+                className="w-full px-3 py-2 border rounded"
+                id="category"
+                name="category"
+                required
+              >
+                <option value="">Select Category</option>
+                <option value="WANT_TO_BUY_SOON">Want to buy soon</option>
+                <option value="MAYBE_LATER">Maybe later</option>
+              </select>
+              <textarea
+                className="w-full px-3 py-2 border rounded"
+                id="notes"
+                name="description"
+                placeholder="Notes (optional)"
+              ></textarea>
+            </div>
+            <button
+              type="submit"
+              className="w-full mt-4 bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
             >
-              <option value="">Select Priority</option>
-              <option value="HIGH">High</option>
-              <option value="MEDIUM">Medium</option>
-              <option value="LOW">Low</option>
-            </select>
-          </div>
-          <div className="grid md:grid-cols-2 gap-4">
-            <select
-              className="w-full px-3 py-2 border rounded"
-              id="category"
-              name="category"
-              required
+              Add Item
+            </button>
+          </form>
+        </div>
+        <div className="grid md:grid-cols-2 gap-4 mb-6">
+          <input
+            type="text"
+            className="w-full px-3 py-2 border border-gray-300 rounded"
+            id="searchInput"
+            placeholder="Search items..."
+            ref={searchInputRef}
+            onChange={handleSearch}
+          />
+          <select
+            className="w-full px-3 py-2 border border-gray-300 rounded"
+            id="sortSelect"
+            ref={sortSelectRef}
+            onChange={(e) => {
+              handleSort(e);
+              toast.success('Sorting updated');
+            }}
+          >
+            <option value="date">Sort by Date</option>
+            <option value="price">Sort by Price</option>
+          </select>
+        </div>
+        <div className="bg-white shadow-md rounded-lg p-6 border border-gray-300">
+          <div className="flex justify-between items-center mb-4">
+            <h5 className="text-xl font-semibold">Your Wishlist Items</h5>
+            <button 
+              onClick={handleRefresh} 
+              className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
             >
-              <option value="">Select Category</option>
-              <option value="WANT_TO_BUY_SOON">Want to buy soon</option>
-              <option value="MAYBE_LATER">Maybe later</option>
-            </select>
-            <textarea
-              className="w-full px-3 py-2 border rounded"
-              id="notes"
-              name="description"
-              placeholder="Notes (optional)"
-            ></textarea>
+              Refresh
+            </button>
           </div>
-          <button
-            type="submit"
-            className="w-full mt-4 bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
-          >
-            Add Item
-          </button>
-        </form>
-      </div>
-      <div className="grid md:grid-cols-2 gap-4 mb-6">
-        <input
-          type="text"
-          className="w-full px-3 py-2 border border-gray-300 rounded"
-          id="searchInput"
-          placeholder="Search items..."
-          ref={searchInputRef}
-          onChange={handleSearch}
-        />
-        <select
-          className="w-full px-3 py-2 border border-gray-300 rounded"
-          id="sortSelect"
-          ref={sortSelectRef}
-          onChange={(e) => {
-            handleSort(e);
-            toast.success('Sorting updated');
-          }}
-        >
-          <option value="date">Sort by Date</option>
-          <option value="price">Sort by Price</option>
-        </select>
-      </div>
-      <div className="bg-white shadow-md rounded-lg p-6 border border-gray-300">
-        <div className="flex justify-between items-center mb-4">
-          <h5 className="text-xl font-semibold">Your Wishlist Items</h5>
-          <button 
-            onClick={handleRefresh} 
-            className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
-          >
-            Refresh
-          </button>
-        </div>
-        <div id="itemsList" className="space-y-4">
-          {itemsList}
+          <div id="itemsList" className="space-y-4">
+            {itemsList}
+          </div>
         </div>
       </div>
-    </div>
     </div>
   );
 };
