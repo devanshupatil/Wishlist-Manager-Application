@@ -88,84 +88,11 @@ const deleteProduct = async (req, res) => {
     }
 };
 
-const searchProduct = async (req, res) => {
-    try {
-        const { name } = req.params;
-        const { data: product, error } = await supabase
-            .from('products')
-            .select()
-            .ilike('name', `%${name}%`)
-            .single();
 
-        if (error) throw error;
-
-        if (!product) {
-            return res.status(404).json({ message: "Product not found" });
-        }
-        res.status(200).json(product);
-    } catch (error) {
-        res.status(500).json({ message: "Server Error", error: error.message });
-    }
-};
-
-const sortByDate = async (req, res) => {
-    try {
-        const { data: products, error } = await supabase
-            .from('products')
-            .select('*')
-            .order('created_at', { ascending: false });
-
-        if (error) throw error;
-
-        res.status(200).json(products);
-    } catch (error) {
-        res.status(500).json({ message: "Server Error", error: error.message });
-    }
-};
-
-const sortByPrice = async (req, res) => {
-    try {
-        const { data: products, error } = await supabase
-            .from('products')
-            .select('*')
-            .order('current_price', { ascending: false });
-
-        if (error) throw error;
-
-        res.status(200).json(products);
-    } catch (error) {
-        res.status(500).json({ message: "Server Error", error: error.message });
-    }
-};
-
-const filterByPriority = async (req, res) => {
-    try {
-        const { priority } = req.params;
-        const validPriorities = ['High', 'Medium', 'Low'];
-        if (!validPriorities.includes(priority)) {
-            return res.status(400).json({ message: "Invalid priority. Must be High, Medium, or Low." });
-        }
-
-        const { data: products, error } = await supabase
-            .from('products')
-            .select('*')
-            .eq('priority', priority);
-
-        if (error) throw error;
-
-        res.status(200).json(products);
-    } catch (error) {
-        res.status(500).json({ message: "Server Error", error: error.message });
-    }
-};
 
 module.exports = {
     getProducts,
     createProduct,
     updateProduct,
     deleteProduct,
-    searchProduct,
-    sortByDate,
-    sortByPrice,
-    filterByPriority
 };
