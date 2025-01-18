@@ -120,7 +120,7 @@ const Home = () => {
       form.querySelector('textarea[name="description"]').value = itemToUpdate.notes;
       form.scrollIntoView({ behavior: 'smooth' });
 
-      const response = await fetch(`${URL}/api/products`, {
+      const response = await fetch(`${URL}/api/products/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -132,10 +132,10 @@ const Home = () => {
         const updatedItem = await response.json();
         setItems(items.map(item => item._id === id ? updatedItem : item));
         toast.success('Item updated successfully!');
+      } else {
+        const errorData = await response.json();
+        toast.error(errorData.message || 'Failed to update item');
       }
-     else {
-      toast.error('Failed to update item');
-    }
 
      
     } catch (error) {
