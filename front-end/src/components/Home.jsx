@@ -85,7 +85,7 @@ const Home = () => {
       const response = await fetch(`${URL}/api/products/`, {
         method: 'DELETE',
         headers: {
-          // 'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
           'Authorization': `Bearer ${getAccessToken()}`,
         },
         body: JSON.stringify({ id })
