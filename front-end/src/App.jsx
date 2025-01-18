@@ -4,6 +4,7 @@ import Home from './components/Home'
 import Signup from './components/Signup'
 import ForgotPass from './components/ForgotPass'
 import { AuthProvider } from './contexts/AuthContex'
+// import ProtectedRoute from './utils/ProtectedRoute'
 
 function App() {
   return (
@@ -11,7 +12,11 @@ function App() {
       <AuthProvider>
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/home" element={
+           
+              <Home />
+            
+          } />
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPass />} />
         </Routes>
