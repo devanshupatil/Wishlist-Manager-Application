@@ -4,9 +4,14 @@ import { supabase } from '../config/supabase';
 import { useAuth } from '../contexts/AuthContex';
 import { useNavigate } from 'react-router-dom'
 
-
-// import { useNavigate } from 'react-router-dom';
-// const API_URL = import.meta.env.VITE_API_URL;
+const rewrites = async () => {
+  return [
+    {
+      source: '/api/:path*',
+      destination: 'https://wishlist-manager-application.onrender.com/api/:path*',
+    },
+  ]
+}
 
 const Home = () => {
   const navigate = useNavigate();
@@ -18,24 +23,16 @@ const Home = () => {
   const searchInputRef = useRef(null);
   const sortSelectRef = useRef(null);
 
-
-
-  // console.log("token",token)
   const fetchProducts = async () => {
     try {
       const response = await fetch(`/api/products`, {
         headers: {
-          // 'Content-Type': 'application/json',
           'Authorization': `Bearer ${getAccessToken()}`
         }
-        // console.log("token", token)
       });
       const data = await response.json();
       if (Array.isArray(data)) {
         setItems(data);
-
-        // console.log("item", items)
-
       } else {
         console.error('Fetched data is not an array:', data);
         setItems([]);
@@ -45,10 +42,8 @@ const Home = () => {
       setItems([]);
     }
   };
+
   useEffect(() => {
-
-    // handleEmailLogic();
-
     fetchProducts();
     fetchProfile();
   }, []);
@@ -57,7 +52,6 @@ const Home = () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (user) {
       const { data, error } = await supabase.auth.getUser();
-
       if (error) {
         console.error('Error fetching profile:', error);
       } else {
@@ -66,20 +60,16 @@ const Home = () => {
     }
   };
 
-
   const handleRefresh = async () => {
     try {
-
       setLoading(true);
       const response = await fetch(`/api/products`, {
         method: 'GET',
         headers: {
-          // 'Content-Type': 'application/json',
           'Authorization': `Bearer ${getAccessToken()}`
         }
       });
       const data = await response.json();
-      console.log("data", data)
       if (response.ok) {
         setItems(Array.isArray(data) ? data : []);
       } else {
@@ -91,12 +81,12 @@ const Home = () => {
       console.error('Error fetching products:', error);
       toast.error('An error occurred while fetching products');
       setItems([]);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleDelete = async (id) => {
-    // console.log("id", id);
     try {
       setLoading(true);
       const response = await fetch(`/api/products/`, {
@@ -110,18 +100,13 @@ const Home = () => {
       if (response.ok) {
         setItems(items.filter(item => item._id !== id));
         toast.success('Product deleted successfully');
-
-        setLoading(false);
       } else {
         toast.error('Failed to delete product');
-        setLoading(false);
       }
     } catch (error) {
       console.error('Error deleting product:', error);
       toast.error('An error occurred while deleting the product');
-      setLoading(false);
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -130,21 +115,19 @@ const Home = () => {
     try {
       setLoading(true);
       const itemToUpdate = items.find(item => item._id === id);
-      // console.log("itemToUpdate", itemToUpdate);
-
       if (!itemToUpdate) {
-
         toast.error('Item not found');
         return;
       }
-      addItemFormRef.current.querySelector('input[name="name"]').value = itemToUpdate.product_name;
-      addItemFormRef.current.querySelector('input[name="productUrl"]').value = itemToUpdate.product_url;
-      addItemFormRef.current.querySelector('input[name="currentPrice"]').value = itemToUpdate.current_price;
-      addItemFormRef.current.querySelector('input[name="targetPrice"]').value = itemToUpdate.target_price;
-      addItemFormRef.current.querySelector('textarea[name="description"]').value = itemToUpdate.notes;
-      addItemFormRef.current.scrollIntoView({ behavior: 'smooth' });
-      const originalSubmit = addItemFormRef.current.onsubmit;
-      addItemFormRef.current.onsubmit = async (e) => {
+      const form = addItemFormRef.current;
+      form.querySelector('input[name="name"]').value = itemToUpdate.product_name;
+      form.querySelector('input[name="productUrl"]').value = itemToUpdate.product_url;
+      form.querySelector('input[name="currentPrice"]').value = itemToUpdate.current_price;
+      form.querySelector('input[name="targetPrice"]').value = itemToUpdate.target_price;
+      form.querySelector('textarea[name="description"]').value = itemToUpdate.notes;
+      form.scrollIntoView({ behavior: 'smooth' });
+      const originalSubmit = form.onsubmit;
+      form.onsubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const updatedData = Object.fromEntries(formData.entries());
@@ -161,7 +144,7 @@ const Home = () => {
           setItems(items.map(item => item._id === id ? updatedProduct : item));
           toast.success('Product updated successfully');
           e.target.reset();
-          addItemFormRef.current.onsubmit = originalSubmit;
+          form.onsubmit = originalSubmit;
         } else {
           toast.error('Failed to update product');
         }
@@ -170,8 +153,7 @@ const Home = () => {
     } catch (error) {
       console.error('Error preparing update:', error);
       toast.error('An error occurred while preparing the update');
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -199,7 +181,6 @@ const Home = () => {
     }
     try {
       setLoading(true);
-      // console.log("token", getAccessToken);
       const response = await fetch(`/api/products`, {
         method: 'POST',
         headers: {
@@ -218,8 +199,7 @@ const Home = () => {
     } catch (error) {
       console.error('Error adding item:', error);
       toast.error('Failed to add item');
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -231,19 +211,12 @@ const Home = () => {
   };
 
   const handleSort = () => {
-
     const sortOption = sortSelectRef.current.value;
-
     let sortedItems = [...items];
-
     if (sortOption === 'date') {
-
       sortedItems.sort((a, b) => new Date(b.added_date) - new Date(a.added_date));
-
     } else if (sortOption === 'price') {
-
       sortedItems.sort((a, b) => a.current_price - b.current_price);
-
     }
     setItems(sortedItems);
   };
@@ -294,180 +267,162 @@ const Home = () => {
 // };
 
 
-    const itemsList = Array.isArray(items) ? items.map(item => (
-
-      <div key={item.id} className={`item-card bg-white shadow-lg rounded-lg p-6 mb-6 ${item.current_price <= item.target_price ? 'border-green-500 border-2' : ''}`}>
-        {item.current_price <= item.target_price && (
-          <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded-r" role="alert">
-            <p className="font-bold">Great news!</p>
-            <p>The price has reached or dropped below your target. It&apos;s time to make your purchase!</p>
-          </div>
-        )}
-        <div className="flex justify-end mb-4">
-          <button
-            onClick={() => handleUpdate(item._id)}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
-            disabled={loading}
-          >
-            {loading ? 'Updating...' : 'Update'}
-          </button>
-          <button
-            onClick={() => handleDelete(item.id)}
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-            disabled={loading}
-          >
-            {loading ? 'Deleting...' : 'Delete'}
-          </button>
-
+  const itemsList = Array.isArray(items) ? items.map(item => (
+    <div key={item.id} className={`item-card bg-white shadow-lg rounded-lg p-6 mb-6 ${item.current_price <= item.target_price ? 'border-green-500 border-2' : ''}`}>
+      {item.current_price <= item.target_price && (
+        <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded-r" role="alert">
+          <p className="font-bold">Great news!</p>
+          <p>The price has reached or dropped below your target. It's time to make your purchase!</p>
         </div>
-        <h3 className="item-name text-lg font-bold text-gray-900 mb-2">Product Name: {item.product_name}</h3>
-        <p className="item-url text-blue-500 mb-2">
-          <a href={item.product_url} target="_blank" rel="noopener noreferrer" className='item-product_url text-gray-700 mb-1'>
-            Product URL: <span className="break-words hover:underline text-blue-500 mb-2">
-              {item.product_url ? (item.product_url.length > 50 ? item.product_url.substring(0, 50) + '...' : item.product_url) : 'N/A'}
-            </span>
-          </a>
-        </p>
-
-        <p className="item-current-price text-gray-700 mb-1">Current Price: <span className="font-semibold">₹{item.current_price ? item.current_price.toLocaleString('en-IN') : 'N/A'}</span></p>
-        <p className="item-target-price text-gray-700 mb-1">Target Price: <span className="font-semibold">₹{item.target_price ? item.target_price.toLocaleString('en-IN') : 'N/A'}</span></p>
-        <p className="item-description text-gray-600 mb-1">Description: <span className="font-semibold">{item.notes || 'No description available'} </span> </p>
-        <p className="item-category text-gray-700 mb-1">Category: <span className="font-semibold">{item.category}</span></p>
-        <p className="item-priority text-gray-700">Priority: <span className="font-semibold">{item.priority}</span></p>
-        <p className="item-created-at text-gray-700">Created At: <span className="font-semibold">{new Date(item.added_date).toLocaleDateString()}</span></p>
+      )}
+      <div className="flex justify-end mb-4">
+        <button
+          onClick={() => handleUpdate(item._id)}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+          disabled={loading}
+        >
+          {loading ? 'Updating...' : 'Update'}
+        </button>
+        <button
+          onClick={() => handleDelete(item.id)}
+          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+          disabled={loading}
+        >
+          {loading ? 'Deleting...' : 'Delete'}
+        </button>
       </div>
+      <h3 className="item-name text-lg font-bold text-gray-900 mb-2">Product Name: {item.product_name}</h3>
+      <p className="item-url text-blue-500 mb-2">
+        <a href={item.product_url} target="_blank" rel="noopener noreferrer" className='item-product_url text-gray-700 mb-1'>
+          Product URL: <span className="break-words hover:underline text-blue-500 mb-2">
+            {item.product_url ? (item.product_url.length > 50 ? item.product_url.substring(0, 50) + '...' : item.product_url) : 'N/A'}
+          </span>
+        </a>
+      </p>
+      <p className="item-current-price text-gray-700 mb-1">Current Price: <span className="font-semibold">₹{item.current_price ? item.current_price.toLocaleString('en-IN') : 'N/A'}</span></p>
+      <p className="item-target-price text-gray-700 mb-1">Target Price: <span className="font-semibold">₹{item.target_price ? item.target_price.toLocaleString('en-IN') : 'N/A'}</span></p>
+      <p className="item-description text-gray-600 mb-1">Description: <span className="font-semibold">{item.notes || 'No description available'} </span> </p>
+      <p className="item-category text-gray-700 mb-1">Category: <span className="font-semibold">{item.category}</span></p>
+      <p className="item-priority text-gray-700">Priority: <span className="font-semibold">{item.priority}</span></p>
+      <p className="item-created-at text-gray-700">Created At: <span className="font-semibold">{new Date(item.added_date).toLocaleDateString()}</span></p>
+    </div>
+  )) : [];
 
-    )) : [];
+  const handleLogout = async () => {
+    try {
+      setLoading(true);
+      await supabase.auth.signOut();
+      localStorage.removeItem('sb-phijictojbnypvqnixkd-auth-token');
+      window.location.href = '/';
+      toast.success('Logout successful');
+    } catch (error) {
+      console.error('Error logging out:', error);
+      toast.error('Failed to logout');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const handleLogout = async () => {
-      try {
+  const handleDeleteAccount = async () => {
+    try {
+      setLoading(true);
+      await supabase.auth.admin.deleteUser(profile?.user?.id);
+      await supabase.auth.signOut();
+      localStorage.removeItem('sb-phijictojbnypvqnixkd-auth-token');
+      toast.success('Account deleted successfully');
+      window.location.href = '/signup';
+    } catch (error) {
+      console.error('Error deleting account:', error);
+      toast.error('Failed to delete account');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        setLoading(true);
-        await supabase.auth.signOut();
-
-        localStorage.removeItem('sb-phijictojbnypvqnixkd-auth-token');
-
-        window.location.href = '/';
-
-        toast.success('Logout successful');
-
-      } catch (error) {
-        console.error('Error logging out:', error);
-        toast.error('Failed to logout');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-
-    const handleDeleteAccount = async () => {
-      try {
-        setLoading(true);
-
-        await supabase.auth.admin.deleteUser(profile?.user?.id);
-
-
-        await supabase.auth.signOut();
-        localStorage.removeItem('sb-phijictojbnypvqnixkd-auth-token');
-
-        toast.success('Account deleted successfully');
-
-        window.location.href = '/signup';
-
-      } catch (error) {
-        console.error('Error deleting account:', error);
-        toast.error('Failed to delete account');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-
-
-    return (
-      <div>
-        <nav className="bg-gray-800 fixed top-0 left-0 right-0 z-10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <h1 className="text-white font-bold text-xl">Wishlist Manager</h1>
-                </div>
-              </div>
-              <div className="flex items-center">
-                <p className="text-gray-300 mr-4">{profile?.user?.email}</p>
-                <button
-                  onClick={handleLogout}
-                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-2"
-                  disabled={loading}
-                >
-                  {loading ? 'Logging out...' : 'Logout'}
-                </button>
-                <button
-                  onClick={handleDeleteAccount}
-                  className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
-                  disabled={loading}
-                >
-                  Delete Account
-                </button>
+  return (
+    <div>
+      <nav className="bg-gray-800 fixed top-0 left-0 right-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <h1 className="text-white font-bold text-xl">Wishlist Manager</h1>
               </div>
             </div>
+            <div className="flex items-center">
+              <p className="text-gray-300 mr-4">{profile?.user?.email}</p>
+              <button
+                onClick={handleLogout}
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-2"
+                disabled={loading}
+              >
+                {loading ? 'Logging out...' : 'Logout'}
+              </button>
+              <button
+                onClick={handleDeleteAccount}
+                className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+                disabled={loading}
+              >
+                Delete Account
+              </button>
+            </div>
           </div>
-        </nav>
+        </div>
+      </nav>
 
-        <div className="container mx-auto max-w-4xl px-4 py-6">
-          <h1 className="text-3xl font-bold text-center mb-6">Wishlist Manager</h1>
+      <div className="container mx-auto max-w-4xl px-4 py-6">
+        <h1 className="text-3xl font-bold text-center mb-6">Wishlist Manager</h1>
 
-          <div className="bg-white border border-gray-300 shadow-md rounded-lg p-10 mb-12">
-            <h5 className="text-xl font-semibold mb-4 text-center">Add New Item</h5>
-            <form ref={addItemFormRef} className="space-y-4" onSubmit={(e) => {
-              handleSubmit(e);
-              toast.success('Item added successfully!');
-            }}>
-              <div className="grid md:grid-cols-2 gap-4">
-                <input
-                  type="text"
-                  className="w-full px-3 py-2 border rounded"
-                  id="productName"
-                  name="name"
-                  placeholder="Product Name"
-                  required
-                />
-                <input
-                  type="url"
-                  className="w-full px-3 py-2 border rounded"
-                  id="productUrl"
-                  name="productUrl"
-                  placeholder="Amazon URL"
-                  required
-                />
-              </div>
-              <div className="grid md:grid-cols-3 gap-4">
-                <input
-                  type="number"
-                  className="w-full px-3 py-2 border rounded"
-                  id="currentPrice"
-                  name="currentPrice"
-                  placeholder="Current Price"
-                  step="0.01"
-                  required
-                />
-                <input
-                  type="number"
-                  className="w-full px-3 py-2 border rounded"
-                  id="targetPrice"
-                  name="targetPrice"
-                  placeholder="Target Price"
-                  step="0.01"
-                />
-                <select
-                  className="w-full px-3 py-2 border rounded"
-                  id="priority"
-                  name="priority"
-                  required
-                >
-                  <option value="">Select Priority</option>
-                  <option value="HIGH">High</option>
+        <div className="bg-white border border-gray-300 shadow-md rounded-lg p-10 mb-12">
+          <h5 className="text-xl font-semibold mb-4 text-center">Add New Item</h5>
+          <form ref={addItemFormRef} className="space-y-4" onSubmit={(e) => {
+            handleSubmit(e);
+            toast.success('Item added successfully!');
+          }}>
+            <div className="grid md:grid-cols-2 gap-4">
+              <input
+                type="text"
+                className="w-full px-3 py-2 border rounded"
+                id="productName"
+                name="name"
+                placeholder="Product Name"
+                required
+              />
+              <input
+                type="url"
+                className="w-full px-3 py-2 border rounded"
+                id="productUrl"
+                name="productUrl"
+                placeholder="Amazon URL"
+                required
+              />
+            </div>
+            <div className="grid md:grid-cols-3 gap-4">
+              <input
+                type="number"
+                className="w-full px-3 py-2 border rounded"
+                id="currentPrice"
+                name="currentPrice"
+                placeholder="Current Price"
+                step="0.01"
+                required
+              />
+              <input
+                type="number"
+                className="w-full px-3 py-2 border rounded"
+                id="targetPrice"
+                name="targetPrice"
+                placeholder="Target Price"
+                step="0.01"
+              />
+              <select
+                className="w-full px-3 py-2 border rounded"
+                id="priority"
+                name="priority"
+                required
+              >
+                <option value="">Select Priority</option>
+                <option value="HIGH">High</option>
                   <option value="MEDIUM">Medium</option>
                   <option value="LOW">Low</option>
                 </select>
