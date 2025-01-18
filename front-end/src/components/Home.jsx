@@ -91,7 +91,7 @@ const Home = () => {
         body: JSON.stringify({ id })
       });
       if (response.ok) {
-        setItems(items.filter(item => item._id !== id));
+        setItems(items.filter(item => item.id !== id));
         toast.success('Product deleted successfully');
       } else {
         toast.error('Failed to delete product');
@@ -131,7 +131,8 @@ const Home = () => {
       });
       if (response.ok) {
         const updatedItem = await response.json();
-        setItems(items.map(item => item._id === id ? updatedItem : item));
+        setItems(items.map(item => item.
+          id === id ? updatedItem : item));
         toast.success('Item updated successfully!');
       } else {
         const errorData = await response.json();
