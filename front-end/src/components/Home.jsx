@@ -120,7 +120,7 @@ const Home = () => {
       form.querySelector('textarea[name="description"]').value = itemToUpdate.notes;
       form.scrollIntoView({ behavior: 'smooth' });
 
-      const response = await fetch(`${URL}/api/products`, {
+      const response = await fetch(`${URL}/api/products/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
