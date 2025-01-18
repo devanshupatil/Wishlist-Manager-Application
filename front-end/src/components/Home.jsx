@@ -108,11 +108,11 @@ const Home = () => {
     // console.log("items", items?.id);
     try {
       setLoading(true);
-      const itemToUpdate = items.find(item => item.id === id,
+      const itemToUpdate = items.find(item => item.id === id
         
-        console.log("id", id),
-        console.log("item", items.id)
       );
+      console.log("id", id)
+      console.log("item", itemToUpdate)
       if (!itemToUpdate) {
         toast.error('Item not found');
         return;
