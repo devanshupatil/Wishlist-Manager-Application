@@ -2,6 +2,7 @@
 const supabase = require('../config/db')
 
 const Product = {
+
   create: async (productData, userId) => {
     const { data, error } = await supabase
       .from('products')
@@ -20,15 +21,21 @@ const Product = {
     return data;
   },
 
-  getById: async (id, userId) => {
-    const { data, error } = await supabase
-      .from('products')
-      .select('*')
-      .eq('id', id)
-      .eq('user_id', userId)
-      .single();
-    if (error) throw error;
-    return data;
+  getAllById: async (id) => {
+    if (!id) {
+      throw new Error('Invalid ID or User ID');
+    }
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .eq('user_id', id);
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error fetching product:', error);
+      throw new Error('Server Error: Unable to retrieve product');
+    }
   },
 
   update: async (id, updateData, userId) => {
