@@ -4,6 +4,7 @@ import { supabase } from '../config/supabase';
 import { useAuth } from '../contexts/AuthContex';
 import { useNavigate } from 'react-router-dom'
 
+
 const rewrites = async () => {
   return [
     {
@@ -22,10 +23,12 @@ const Home = () => {
   const addItemFormRef = useRef(null);
   const searchInputRef = useRef(null);
   const sortSelectRef = useRef(null);
+  
+  const URL = import.meta.env.VITE_BACKEND_URL;
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch(`/api/products`, {
+      const response = await fetch(`${URL}/api/products`, {
         headers: {
           'Authorization': `Bearer ${getAccessToken()}`
         }
