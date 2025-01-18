@@ -105,30 +105,25 @@ const Home = () => {
   };
 
   const handleUpdate = async (id) => {
-    // console.log("items", items?.id);
     try {
       setLoading(true);
-      const itemToUpdate = items.find(item => item.id === id
-        
-      );
-      console.log("id", id)
-      console.log("item", itemToUpdate)
+      const itemToUpdate = items.find(item => item.id === id);
+
       if (!itemToUpdate) {
         toast.error('Item not found');
         return;
       }
+
       const form = addItemFormRef.current;
       form.querySelector('input[name="name"]').value = itemToUpdate.product_name;
       form.querySelector('input[name="productUrl"]').value = itemToUpdate.product_url;
       form.querySelector('input[name="currentPrice"]').value = itemToUpdate.current_price;
       form.querySelector('input[name="targetPrice"]').value = itemToUpdate.target_price;
       form.querySelector('textarea[name="description"]').value = itemToUpdate.notes;
-      form.scrollIntoView({ behavior: 'smooth' });
-
       form.querySelector('select[name="category"]').value = itemToUpdate.category;
       form.querySelector('select[name="priority"]').value = itemToUpdate.priority;
 
-
+      form.scrollIntoView({ behavior: 'smooth' });
 
       const response = await fetch(`${URL}/api/products/${id}`, {
         method: 'PUT',
@@ -138,17 +133,15 @@ const Home = () => {
         },
         body: JSON.stringify(itemToUpdate)
       });
+
       if (response.ok) {
         const updatedItem = await response.json();
-        setItems(items.map(item => item.
-          id === id ? updatedItem : item));
+        setItems(items.map(item => item.id === id ? updatedItem : item));
         toast.success('Item updated successfully!');
       } else {
         const errorData = await response.json();
         toast.error(errorData.message || 'Failed to update item');
       }
-
-     
     } catch (error) {
       console.error('Error updating item:', error);
       toast.error('Failed to update item');
