@@ -4,16 +4,6 @@ import { supabase } from '../config/supabase';
 import { useAuth } from '../contexts/AuthContex';
 import { useNavigate } from 'react-router-dom'
 
-
-const rewrites = async () => {
-  return [
-    {
-      source: '/api/:path*',
-      destination: 'https://wishlist-manager-application.onrender.com/api/:path*',
-    },
-  ]
-}
-
 const Home = () => {
   const navigate = useNavigate();
   const { getAccessToken } = useAuth();
@@ -23,7 +13,7 @@ const Home = () => {
   const addItemFormRef = useRef(null);
   const searchInputRef = useRef(null);
   const sortSelectRef = useRef(null);
-  
+
   const URL = import.meta.env.VITE_BACKEND_URL;
 
   const fetchProducts = async () => {
@@ -66,7 +56,7 @@ const Home = () => {
   const handleRefresh = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/products`, {
+      const response = await fetch(`${URL}/api/products`, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${getAccessToken()}`
