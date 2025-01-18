@@ -82,7 +82,7 @@ const Home = () => {
   const handleDelete = async (id) => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/products/`, {
+      const response = await fetch(`${URL}/api/products/`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -124,7 +124,7 @@ const Home = () => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const updatedData = Object.fromEntries(formData.entries());
-        const response = await fetch(`/api/products/${id}`, {
+        const response = await fetch(`${URL}/api/products/${id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -174,7 +174,7 @@ const Home = () => {
     }
     try {
       setLoading(true);
-      const response = await fetch(`/api/products`, {
+      const response = await fetch(`${URL}/api/products`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
