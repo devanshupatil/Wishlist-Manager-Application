@@ -105,11 +105,14 @@ const Home = () => {
   };
 
   const handleUpdate = async (id) => {
-    console.log("id", id);
-    console.log("items", items?.id);
+    // console.log("items", items?.id);
     try {
       setLoading(true);
-      const itemToUpdate = items.find(item => item.id === id);
+      const itemToUpdate = items.find(item => item.id === id,
+        
+        console.log("id", id),
+        console.log("item", items.id)
+      );
       if (!itemToUpdate) {
         toast.error('Item not found');
         return;
@@ -125,7 +128,7 @@ const Home = () => {
       form.querySelector('select[name="category"]').value = itemToUpdate.category;
       form.querySelector('select[name="priority"]').value = itemToUpdate.priority;
 
-      
+
 
       const response = await fetch(`${URL}/api/products/${id}`, {
         method: 'PUT',
