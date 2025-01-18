@@ -122,6 +122,11 @@ const Home = () => {
       form.querySelector('textarea[name="description"]').value = itemToUpdate.notes;
       form.scrollIntoView({ behavior: 'smooth' });
 
+      form.querySelector('select[name="category"]').value = itemToUpdate.category;
+      form.querySelector('select[name="priority"]').value = itemToUpdate.priority;
+
+      
+
       const response = await fetch(`${URL}/api/products/${id}`, {
         method: 'PUT',
         headers: {
