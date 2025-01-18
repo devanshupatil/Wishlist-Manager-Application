@@ -25,8 +25,8 @@ dotenv.config();
 
 app.use(cors({
   origin: [
-    'http://localhost:4001',  // Local development
-    'http://localhost:5173',
+    // 'http://localhost:4001',  // Local development
+    // 'http://localhost:5173',
     'https://wishlist-manager-app.netlify.app',  // Production frontend
     'https://wishlist-manager-application.onrender.com'  // If needed
   ],
