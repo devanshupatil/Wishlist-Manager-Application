@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthContex';
 import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { getAccessToken } = useAuth();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -119,40 +119,28 @@ const Home = () => {
       form.querySelector('input[name="targetPrice"]').value = itemToUpdate.target_price;
       form.querySelector('textarea[name="description"]').value = itemToUpdate.notes;
       form.scrollIntoView({ behavior: 'smooth' });
-      const originalSubmit = form.onsubmit;
-      form.onsubmit = async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        const updatedData = Object.fromEntries(formData.entries());
-        try {
-          const response = await fetch(`${URL}/api/products/${id}`, {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${getAccessToken()}`,
-            },
-            body: JSON.stringify(updatedData),
-          });
-          if (response.ok) {
-            const updatedProduct = await response.json();
-            setItems(items.map(item => item._id === id ? updatedProduct : item));
-            toast.success('Product updated successfully');
-            e.target.reset();
-          } else {
-            const errorData = await response.json();
-            toast.error(errorData.message || 'Failed to update product');
-          }
-        } catch (error) {
-          console.error('Error updating product:', error);
-          toast.error('An error occurred while updating the product');
-        } finally {
-          form.onsubmit = originalSubmit;
-        }
-      };
-      toast.success('Item loaded for update. Make changes and submit to update.');
+
+      const response = await fetch(`${URL}/api/products`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getAccessToken()}`,
+        },
+        body: JSON.stringify(itemToUpdate)
+      });
+      if (response.ok) {
+        const updatedItem = await response.json();
+        setItems(items.map(item => item._id === id ? updatedItem : item));
+        toast.success('Item updated successfully!');
+      }
+     else {
+      toast.error('Failed to update item');
+    }
+
+     
     } catch (error) {
-      console.error('Error preparing update:', error);
-      toast.error('An error occurred while preparing the update');
+      console.error('Error updating item:', error);
+      toast.error('Failed to update item');
     } finally {
       setLoading(false);
     }
