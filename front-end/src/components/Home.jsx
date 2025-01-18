@@ -125,22 +125,29 @@ const Home = () => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const updatedData = Object.fromEntries(formData.entries());
-        const response = await fetch(`${URL}/api/products/${id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${getAccessToken()}`,
-          },
-          body: JSON.stringify(updatedData),
-        });
-        if (response.ok) {
-          const updatedProduct = await response.json();
-          setItems(items.map(item => item._id === id ? updatedProduct : item));
-          toast.success('Product updated successfully');
-          e.target.reset();
+        try {
+          const response = await fetch(`${URL}/api/products/${id}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${getAccessToken()}`,
+            },
+            body: JSON.stringify(updatedData),
+          });
+          if (response.ok) {
+            const updatedProduct = await response.json();
+            setItems(items.map(item => item._id === id ? updatedProduct : item));
+            toast.success('Product updated successfully');
+            e.target.reset();
+          } else {
+            const errorData = await response.json();
+            toast.error(errorData.message || 'Failed to update product');
+          }
+        } catch (error) {
+          console.error('Error updating product:', error);
+          toast.error('An error occurred while updating the product');
+        } finally {
           form.onsubmit = originalSubmit;
-        } else {
-          toast.error('Failed to update product');
         }
       };
       toast.success('Item loaded for update. Make changes and submit to update.');
