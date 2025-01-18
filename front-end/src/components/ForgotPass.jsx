@@ -7,7 +7,9 @@ const ForgotPass = () => {
   // const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
+    
     const emailInput = e.target.elements.email.value;
 
     if (!emailInput) {

@@ -1,27 +1,22 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../config/supabase';
-import PropTypes from 'prop-types';
 
 const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
-  AuthProvider.propTypes = {
-    children: PropTypes.node.isRequired,
-  };
   const [user, setUser] = useState(null);
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+    // Check active sessions and sets the user
+    supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
-    };
+    });
 
-    fetchSession();
-
+    // Listen for changes on auth state
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
@@ -30,38 +25,54 @@ export const AuthProvider = ({ children }) => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async ({ email, password }) => {
+  const signUp = async (email, password) => {
     const { data, error } = await supabase.auth.signUp({
+      email,
+      password
+    });
+    if (error) throw error;
+    return data;
+  };
+
+  const signIn = async (email, password) => {
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
     if (error) throw error;
     return data;
   };
-  
 
-  const signOut = () => supabase.auth.signOut();
+  const signOut = () => {
+    return supabase.auth.signOut();
+  };
 
-  const getAccessToken = () => session?.access_token;
+  const getUser = async () => {
+   
+    return session?.user?.email;
+  };
 
-  const value = {
-    user,
-    signUp,
-    signOut,
-    getAccessToken,
-    isAuthenticated: !!user
+  // Helper function to get the access token
+  const getAccessToken = () => {
+    return session?.access_token;
   };
 
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={{
+      user,
+      session,
+      getUser,
+      signUp,
+      signIn,
+      signOut,
+      getAccessToken, // Expose the getAccessToken function
+      isAuthenticated: !!user
+    }}>
       {!loading && children}
     </AuthContext.Provider>
   );
 };
 
-export const userAuth = {
-  signUp: AuthProvider.signUp,
-  signIn: AuthProvider.signIn,
+export const useAuth = () => {
+  return useContext(AuthContext);
 };
-
-export const useAuth = () => useContext(AuthContext);

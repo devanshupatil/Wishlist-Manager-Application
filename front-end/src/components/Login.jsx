@@ -10,20 +10,19 @@ const Login = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
  
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const {error } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
         toast.error(error.message || 'Login failed');
-        console.error('Login error:', email, password);
+        console.error('Login error:', error);
       } else {
         toast.success('Login successful');
         navigate('/home', { replace: true });
@@ -33,6 +32,24 @@ const Login = () => {
       toast.error('An error occurred. Please try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+      });
+
+      if (error) {
+        toast.error('google login failed');
+        console.error('google login error:', error);
+      } else if (data) {
+        toast.success('google login successful');
+      }
+    } catch (error) {
+      console.error('Error with google login:', error);
+      toast.error('An error occurred. Please try again.');
     }
   };
 
@@ -107,7 +124,10 @@ const Login = () => {
             </div>
           </div>
           <div className="w-full flex justify-center">
-            <button className="flex items-center bg-white border border-gray-300 rounded-lg shadow-md px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+            <button 
+              className="flex items-center bg-white border border-gray-300 rounded-lg shadow-md px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+              onClick={handleGoogleLogin}
+            >
               <svg className="h-6 w-6 mr-2" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" width="800px" height="800px" viewBox="-0.5 0 48 48" version="1.1">
                 <title>Google-color</title>
                 <desc>Created with Sketch.</desc>
