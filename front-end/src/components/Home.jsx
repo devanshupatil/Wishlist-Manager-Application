@@ -106,6 +106,7 @@ const Home = () => {
 
   const handleUpdate = async (id) => {
     console.log("id", id);
+    console.log("items", items?.id);
     try {
       setLoading(true);
       const itemToUpdate = items.find(item => item.id === id);
