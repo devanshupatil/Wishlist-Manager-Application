@@ -6,11 +6,8 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-     '/api': {
-  target: 'https://wishlist-manager-application.onrender.com',
-  changeOrigin: true,
-  rewrite: (path) => path.replace(/^\/api/, '')
-}
+     '/api': 'https://wishlist-manager-application.onrender.com'
+     
 
     },
   },

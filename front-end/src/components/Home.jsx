@@ -15,6 +15,7 @@ const Home = () => {
   const sortSelectRef = useRef(null);
 
   const URL = import.meta.env.VITE_BACKEND_URL;
+  console.log("url", URL);
 
   const fetchProducts = async () => {
     try {
