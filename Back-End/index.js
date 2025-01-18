@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const dotenv = require('dotenv');
 const supabase = require('./config/db');
-const port = 4001
+const port = 4000 || process.env.PORT;
 const productRouter = require('./routes/productRoutes');
 const cors = require('cors');
 
