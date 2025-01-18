@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom'
 // const API_URL = import.meta.env.VITE_API_URL;
 
 const Home = () => {
+  const navigate = useNavigate();
   const { getAccessToken } = useAuth();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -24,7 +25,7 @@ const Home = () => {
     try {
       const response = await fetch(`/api/products`, {
         headers: {
-          'Content-Type': 'application/json',
+          // 'Content-Type': 'application/json',
           'Authorization': `Bearer ${getAccessToken()}`
         }
         // console.log("token", token)
@@ -73,11 +74,12 @@ const Home = () => {
       const response = await fetch(`/api/products`, {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json',
+          // 'Content-Type': 'application/json',
           'Authorization': `Bearer ${getAccessToken()}`
         }
       });
       const data = await response.json();
+      console.log("data", data)
       if (response.ok) {
         setItems(Array.isArray(data) ? data : []);
       } else {

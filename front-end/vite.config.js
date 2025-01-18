@@ -7,8 +7,6 @@ export default defineConfig({
   server: {
     proxy: {
      '/api': 'https://wishlist-manager-application.onrender.com'
-    //  '/api': 'https://localhost:4000'
-
 
     },
   },
