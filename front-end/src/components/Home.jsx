@@ -397,9 +397,10 @@ const EmailSend = async (items) => {  // Accept items as parameter
               const itemToUpdate = {
                 product_name: e.target.productName.value,
                 current_price: e.target.currentPrice.value,
-                targetPrice: e.target.targetPrice.value,
-                productUrl: e.target.productUrl.value,
+                target_price: e.target.targetPrice.value,
+                product_url: e.target.productUrl.value,
                 notes: e.target.notes.value,
+                added_date: new Date().toISOString(),
                 category: e.target.category.value,
                 priority: e.target.priority.value
               };
