@@ -13,7 +13,7 @@ const Home = () => {
   const addItemFormRef = useRef(null);
   const searchInputRef = useRef(null);
   const sortSelectRef = useRef(null);
-  const [idToUpdate, setIdToUpdate] = useState(null);
+  const idToUpdate = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
 
 
@@ -109,12 +109,10 @@ const Home = () => {
   };
   
 
+  const update = async (idToUpdate) => {
 
-  const handleUpdate = async (idToUpdate) => {
-    setIsUpdating(true);
-
-    
     try {
+
       const itemToUpdate = items.find(item => item.id === idToUpdate);
 
       if (!itemToUpdate) {
@@ -130,8 +128,23 @@ const Home = () => {
       form.querySelector('textarea[name="description"]').value = itemToUpdate.notes;
       form.querySelector('select[name="category"]').value = itemToUpdate.category;
       form.querySelector('select[name="priority"]').value = itemToUpdate.priority;
-
       form.scrollIntoView({ behavior: 'smooth' });
+      setIsUpdating(true);
+    }
+
+    catch (error) {
+      console.error('Error updating item:', error);
+      toast.error('Failed to update item');
+    }
+
+  };
+
+  const handleUpdate = async (idToUpdate,itemToUpdate ) => {
+
+    setIsUpdating(true);
+
+    
+    try {
 
       const response = await fetch(`${URL}/api/products/${idToUpdate}`, {
         method: 'PUT',
@@ -277,11 +290,11 @@ const EmailSend = async (items) => {  // Accept items as parameter
       )}
       <div className="flex justify-end mb-4">
         <button
-          onClick={() => handleUpdate(item.id)}
+          onClick={() => update(item.id)}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
           disabled={loading}
         >
-          {item.isUpdating ? 'Updating...' : 'Update'}
+          {loading? 'Updating...' : 'Update'}
         </button>
         <button
           onClick={() => handleDelete(item.id)}
@@ -378,8 +391,15 @@ const EmailSend = async (items) => {  // Accept items as parameter
           <form ref={addItemFormRef} className="space-y-4" onSubmit={(e) => {
             e.preventDefault();
             if (isUpdating) {
-              setIdToUpdate(e.target.elements.id.value);
-              handleUpdate(idToUpdate);
+              const itemToUpdate = {
+                name: e.target.elements.name.value,
+                price: e.target.elements.price.value,
+                link: e.target.elements.link.value,
+                description: e.target.elements.description.value,
+                category: e.target.elements.category.value,
+                priority: e.target.elements.priority.value
+              };
+              handleUpdate(itemToUpdate.id, itemToUpdate);
             } else {
               handleSubmit(e);
             }
