@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { supabase } from '../config/supabase';
 import { useAuth } from '../contexts/AuthContex';
 import { Calendar, PencilLine, Trash2 } from "lucide-react";
-import { FormatDate } from '../utils/FormatDate';
+import { FormatDate } from '../utlis/formatDate';
 
 
 const Home = () => {
