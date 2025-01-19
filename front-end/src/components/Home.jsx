@@ -392,15 +392,15 @@ const EmailSend = async (items) => {  // Accept items as parameter
             e.preventDefault();
             if (isUpdating) {
               const itemToUpdate = {
-                id: e.target.elements.id.value,
-                product_name: e.target.elements.productName.value,
-                current_price: e.target.elements.currentPrice.value,
-                targetPrice: e.target.elements.targetPrice.value,
-                productUrl: e.target.elements.productUrl.value,
-                notes: e.target.elements.notes.value,
+                id: e.target.id.value,
+                product_name: e.target.productName.value,
+                current_price: e.target.currentPrice.value,
+                targetPrice: e.target.targetPrice.value,
+                productUrl: e.target.productUrl.value,
+                notes: e.target.notes.value,
                 addedDate: new Date().toISOString(),
-                category: e.target.elements.category.value,
-                priority: e.target.elements.priority.value
+                category: e.target.category.value,
+                priority: e.target.priority.value
               };
               handleUpdate(itemToUpdate.id, itemToUpdate);
             } else {
