@@ -402,6 +402,9 @@ const EmailSend = async (items) => {  // Accept items as parameter
                 category: e.target.category.value,
                 priority: e.target.priority.value
               };
+              console.log("id to update:", itemToUpdate.id);
+              console.log("id :", itemToUpdate?.id);
+              console.log("itemToUpdate:", itemToUpdate);
               handleUpdate(itemToUpdate.id, itemToUpdate);
             } else {
               handleSubmit(e);
