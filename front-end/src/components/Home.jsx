@@ -400,7 +400,6 @@ const EmailSend = async (items) => {  // Accept items as parameter
                 targetPrice: e.target.targetPrice.value,
                 productUrl: e.target.productUrl.value,
                 notes: e.target.notes.value,
-                addedDate: new Date().toISOString(),
                 category: e.target.category.value,
                 priority: e.target.priority.value
               };
