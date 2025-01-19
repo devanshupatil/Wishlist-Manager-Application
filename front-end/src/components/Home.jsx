@@ -13,7 +13,7 @@ const Home = () => {
   const addItemFormRef = useRef(null);
   const searchInputRef = useRef(null);
   const sortSelectRef = useRef(null);
-  const idToUpdate = useState(null);
+  const [idToUpdate, setIdToUpdate]  = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
 
 
@@ -115,6 +115,8 @@ const Home = () => {
 
       const itemToUpdate = items.find(item => item.id === idToUpdate);
 
+      setIdToUpdate(idToUpdate);
+
       if (!itemToUpdate) {
         toast.error('Item not found');
         return;
@@ -139,9 +141,10 @@ const Home = () => {
 
   };
 
-  const handleUpdate = async (idToUpdate,itemToUpdate ) => {
+  const handleUpdate = async (itemToUpdate ) => {
 
     setIsUpdating(true);
+    console.log("idToUpdate", idToUpdate);
 
     
     try {
@@ -392,7 +395,6 @@ const EmailSend = async (items) => {  // Accept items as parameter
             e.preventDefault();
             if (isUpdating) {
               const itemToUpdate = {
-                id: e.target.id.value,
                 product_name: e.target.productName.value,
                 current_price: e.target.currentPrice.value,
                 targetPrice: e.target.targetPrice.value,
@@ -402,10 +404,7 @@ const EmailSend = async (items) => {  // Accept items as parameter
                 category: e.target.category.value,
                 priority: e.target.priority.value
               };
-              console.log("id to update:", itemToUpdate.id);
-              console.log("id :", itemToUpdate?.id);
-              console.log("itemToUpdate:", itemToUpdate);
-              handleUpdate(itemToUpdate.id, itemToUpdate);
+              handleUpdate(itemToUpdate);
             } else {
               handleSubmit(e);
             }
