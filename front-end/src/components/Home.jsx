@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import toast from "react-hot-toast";
 import { supabase } from '../config/supabase';
 import { useAuth } from '../contexts/AuthContex';
-import { useNavigate } from 'react-router-dom'
+// import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
   // const navigate = useNavigate();
@@ -37,6 +37,7 @@ const Home = () => {
   };
 
   useEffect(() => {
+    handleEmailLogic();
     fetchProducts();
     fetchProfile();
   }, []);
@@ -213,50 +214,50 @@ const Home = () => {
     setItems(sortedItems);
   };
 
-//   const handleEmailLogic = async () => {
-//     const itemsOnTarget = items.filter(item => item.current_price <= item.target_price);
+  const handleEmailLogic = async () => {
+    const itemsOnTarget = items.filter(item => item.current_price <= item.target_price);
     
-//     if (itemsOnTarget.length > 0) {
-//         try {
-//             await EmailSend(itemsOnTarget);  // Just pass the filtered items
-//             toast.success(`Email sent for ${itemsOnTarget.length} item(s) on target`);
-//         } catch (error) {
-//             console.error('Error sending email:', error);
-//             toast.error('Failed to send email notification');
-//         }
-//     }
-// };
+    if (itemsOnTarget.length > 0) {
+        try {
+            await EmailSend(itemsOnTarget);  // Just pass the filtered items
+            toast.success(`Email sent for ${itemsOnTarget.length} item(s) on target`);
+        } catch (error) {
+            console.error('Error sending email:', error);
+            toast.error('Failed to send email notification');
+        }
+    }
+};
 
-// const EmailSend = async (items) => {  // Accept items as parameter
-//     try {
-//         setLoading(true);
-//         const { data, error } = await supabase.auth.getUser();
-//         if (error) throw error;
+const EmailSend = async (items) => {  // Accept items as parameter
+    try {
+        setLoading(true);
+        const { data, error } = await supabase.auth.getUser();
+        if (error) throw error;
 
-//         // Create a formatted email body with item details
-//         const emailBody = items.map(item => 
-//             `Product: ${item.product_name}\n` +
-//             `Current Price: ${item.current_price}\n` +
-//             `Target Price: ${item.target_price}\n`
-//         ).join('\n');
+        // Create a formatted email body with item details
+        const emailBody = items.map(item => 
+            `Product: ${item.product_name}\n` +
+            `Current Price: ${item.current_price}\n` +
+            `Target Price: ${item.target_price}\n`
+        ).join('\n');
 
-//         const { error: emailError } = await supabase.functions.invoke('send-email', {
-//             body: JSON.stringify({
-//                 to: data.user.email,
-//                 subject: 'Your Wishlist Update',
-//                 body: `The following items have reached their target price:\n\n${emailBody}`
-//             })
-//         });
+        const { error: emailError } = await supabase.functions.invoke('send-email', {
+            body: JSON.stringify({
+                to: data.user.email,
+                subject: 'Your Wishlist Update',
+                body: `The following items have reached their target price:\n\n${emailBody}`
+            })
+        });
         
-//         if (emailError) throw emailError;
-//         // Don't show success toast here since it's already shown in handleEmailLogic
-//     } catch (error) {
-//         console.error('Error sending email:', error);
-//         throw error;  // Propagate error to handleEmailLogic
-//     } finally {
-//         setLoading(false);
-//     }
-// };
+        if (emailError) throw emailError;
+        // Don't show success toast here since it's already shown in handleEmailLogic
+    } catch (error) {
+        console.error('Error sending email:', error);
+        throw error;  // Propagate error to handleEmailLogic
+    } finally {
+        setLoading(false);
+    }
+};
 
 
   const itemsList = Array.isArray(items) ? items.map(item => (

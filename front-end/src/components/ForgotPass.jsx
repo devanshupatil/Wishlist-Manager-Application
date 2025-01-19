@@ -4,12 +4,12 @@ import { supabase } from '../config/supabase';
 
 const ForgotPass = () => {
   const [email, setEmail] = useState('');
-  // const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  
 
   const handleSubmit = async (e) => {
-
     e.preventDefault();
-    
+
     const emailInput = e.target.elements.email.value;
 
     if (!emailInput) {
@@ -17,11 +17,10 @@ const ForgotPass = () => {
       return;
     }
 
-    // setEmail(emailInput);
-    // setIsLoading(true);
+    setIsLoading(true);
 
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email);
+      const { error } = await supabase.auth.resetPasswordForEmail(emailInput);
       if (error) {
         toast.error(error.message);
       } else {
@@ -31,44 +30,67 @@ const ForgotPass = () => {
       console.error(err);
       toast.error('Something went wrong. Please try again later.');
     } finally {
-      // setIsLoading(false);
+      setIsLoading(false);
     }
   };
 
   return (
-    <main id="content" role="main" className="w-full  max-w-md mx-auto p-6">
-      <div className="mt-7 bg-white  rounded-xl shadow-lg dark:bg-gray-800 dark:border-gray-700 border-2 border-indigo-300">
-        <div className="p-4 sm:p-7">
-          <div className="text-center">
-            <h1 className="block text-2xl font-bold text-gray-800 dark:text-white">Forgot password?</h1>
-            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-              Remember your password?
-              <a className="text-blue-600 decoration-2 hover:underline font-medium" href="/">
-                Login here
-              </a>
-            </p>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-md w-96">
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-4">
+          Reset Password
+        </h2>
+        <p className="text-center text-gray-600 mb-8">
+          Enter your email address and we'll send you a link to reset your
+          password.
+        </p>
+
+        <form className="space-y-6" onSubmit={handleSubmit}>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-700">
+              Email
+            </label>
+            <div className="relative">
+              <svg
+                className="absolute left-3 top-3 h-5 w-5 text-gray-400"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2V6c0-1.103-.897-2-2-2h-8.997zM12 16c-1.657 0-3-1.343-3-3 0-.343.022-.659.063-.974l.974.063c1.457.091 2.732 1.03 2.732 2.823 0 1.792-1.275 3.233-2.732 3.233z" />
+              </svg>
+              <input
+                type="email"
+                className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Enter your email"
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
           </div>
 
-          <div className="mt-5">
-            <form onSubmit={handleSubmit}>
-              <div className="grid gap-y-4">
-                <div>
-                  <label htmlFor="email" className="block text-sm font-bold ml-1 mb-2 dark:text-white">Email address</label>
-                  <div className="relative">
-                    <input type="email" id="email" name="email" 
-                    onChange={(e) => setEmail(e.target.value)}
-                    value={email}
-                    className="py-3 px-4 block w-full border-2 border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 shadow-sm" required aria-describedby="email-error" />
-                  </div>
-                  {/* {error && <p className="text-xs text-red-600 mt-2" id="email-error">{error}</p>} */}
-                </div>
-                <button type="submit" className="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800">Reset password</button>
-              </div>
-            </form>
-          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200"
+            disabled={isLoading}
+          >
+            {isLoading ? 'Sending...' : 'Send Reset Link'}
+          </button>
+        </form>
+
+        <div className="mt-6 text-center">
+          <a href="/"
+            className="text-sm text-blue-600 hover:underline"
+            onClick={() => {}}
+          >
+            Back to Sign In
+            </a>
+
+            <a href="/resetPassword">Reset Password</a>
         </div>
       </div>
-    </main>
+    </div>
   );
 };
 
