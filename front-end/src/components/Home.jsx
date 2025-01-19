@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import toast from "react-hot-toast";
 import { supabase } from '../config/supabase';
 import { useAuth } from '../contexts/AuthContex';
@@ -6,15 +7,37 @@ import { Calendar, PencilLine, Trash2 } from "lucide-react";
 import { FormatDate } from '../utlis/formatDate';
 
 
+const variants = {
+  initial: {
+    opacity: 0,
+    y: 20,
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: 'easeInOut',
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: 20,
+    transition: {
+      duration: 0.5,
+      ease: 'easeInOut',
+    },
+  },
+};
+
 const Home = () => {
   const { getAccessToken } = useAuth();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState('');
-  // const addItemFormRef = useRef(null);
+  const addItemFormRef = useRef(null);
   const searchInputRef = useRef(null);
   const sortSelectRef = useRef(null);
-
 
   const URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -148,7 +171,14 @@ const Home = () => {
 
 
   const itemsList = Array.isArray(items) ? items.map(item => (
-    <div key={item.id} className={`item-card bg-white shadow-lg rounded-lg p-6 mb-6 ${item.current_price <= item.target_price ? 'border-green-500 border-2' : ''}`}>
+    <motion.div
+      key={item.id}
+      className={`item-card bg-white shadow-lg rounded-lg p-6 mb-6 ${item.current_price <= item.target_price ? 'border-green-500 border-2' : ''}`}
+      variants={variants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+    >
       {item.current_price <= item.target_price && (
         <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded-r" role="alert">
           <p className="font-bold">Great news!</p>
@@ -200,7 +230,7 @@ const Home = () => {
       <p className="item-category text-gray-700 mb-1">Category: <span className="font-semibold">{item.category}</span></p>
       <p className="item-priority text-gray-700">Priority: <span className="font-semibold">{item.priority}</span></p>
       <p className="item-created-at text-gray-700">Created At: <span className="font-semibold">{new Date(item.added_date).toLocaleDateString()}</span></p>
-    </div>
+    </motion.div>
   )) : [];
 
   const handleLogout = async () => {
@@ -275,7 +305,7 @@ const Home = () => {
 
         <button
           onClick={() => {
-            window.location.href = '/additems';
+            window.location.href = '/add-items';
           }}
           className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
         >
