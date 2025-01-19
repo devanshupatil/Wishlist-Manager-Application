@@ -13,6 +13,9 @@ const Home = () => {
   const addItemFormRef = useRef(null);
   const searchInputRef = useRef(null);
   const sortSelectRef = useRef(null);
+  const [idToUpdate, setIdToUpdate] = useState(null);
+  const [isUpdating, setIsUpdating] = useState(false);
+
 
   const URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -104,11 +107,15 @@ const Home = () => {
       setLoading(false);
     }
   };
+  
 
-  const handleUpdate = async (id) => {
+
+  const handleUpdate = async (idToUpdate) => {
+    setIsUpdating(true);
+
+    
     try {
-      setLoading(true);
-      const itemToUpdate = items.find(item => item.id === id);
+      const itemToUpdate = items.find(item => item.id === idToUpdate);
 
       if (!itemToUpdate) {
         toast.error('Item not found');
@@ -126,7 +133,7 @@ const Home = () => {
 
       form.scrollIntoView({ behavior: 'smooth' });
 
-      const response = await fetch(`${URL}/api/products/${id}`, {
+      const response = await fetch(`${URL}/api/products/${idToUpdate}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -137,7 +144,7 @@ const Home = () => {
 
       if (response.ok) {
         const updatedItem = await response.json();
-        setItems(items.map(item => item.id === id ? updatedItem : item));
+        setItems(items.map(item => item.id === idToUpdate ? updatedItem : item));
         toast.success('Item updated successfully!');
       } else {
         const errorData = await response.json();
@@ -147,7 +154,7 @@ const Home = () => {
       console.error('Error updating item:', error);
       toast.error('Failed to update item');
     } finally {
-      setLoading(false);
+      setIsUpdating(false);
     }
   };
 
@@ -367,10 +374,16 @@ const EmailSend = async (items) => {  // Accept items as parameter
         <h1 className="text-3xl font-bold text-center mb-6">Wishlist Manager</h1>
 
         <div className="bg-white border border-gray-300 shadow-md rounded-lg p-10 mb-12">
-          <h5 className="text-xl font-semibold mb-4 text-center">Add New Item</h5>
+          <h5 className="text-xl font-semibold mb-4 text-center">{isUpdating ? 'Update Item' : 'Add New Item'}</h5>
           <form ref={addItemFormRef} className="space-y-4" onSubmit={(e) => {
-            handleSubmit(e);
-            toast.success('Item added successfully!');
+            e.preventDefault();
+            if (isUpdating) {
+              setIdToUpdate(e.target.elements.id.value);
+              handleUpdate(idToUpdate);
+            } else {
+              handleSubmit(e);
+            }
+            setIsUpdating(false);
           }}>
             <div className="grid md:grid-cols-2 gap-4">
               <input
@@ -443,7 +456,7 @@ const EmailSend = async (items) => {  // Accept items as parameter
                 className="w-full mt-4 bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
                 disabled={loading}
               >
-                {loading ? 'Adding...' : 'Add Item'}
+                {loading ? 'Adding...' : isUpdating ? 'Update Item' : 'Add Item'}
               </button>
             </form>
           </div>
