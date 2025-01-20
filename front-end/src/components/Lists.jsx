@@ -41,7 +41,6 @@ const Lists = () => {
     const searchInputRef = useRef(null);
     const sortSelectRef = useRef(null);
 
-
     const fetchProducts = async () => {
         try {
             const response = await fetch(`${URL}/api/products`, {
@@ -50,6 +49,11 @@ const Lists = () => {
                     'Authorization': `Bearer ${getAccessToken()}`
                 }
             });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch products');
+            }
+
             const data = await response.json();
 
             if (Array.isArray(data)) {
@@ -59,11 +63,7 @@ const Lists = () => {
                 setItems([]);
             }
         } catch (error) {
-            if (error instanceof SyntaxError) {
-                console.error('Error parsing JSON:', error);
-            } else {
-                console.error('Error fetching products:', error);
-            }
+            console.error('Error fetching products:', error);
             setItems([]);
         }
     };
