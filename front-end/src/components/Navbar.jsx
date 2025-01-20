@@ -29,9 +29,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="bg-gray-800 text-white p-4 flex justify-between items-center">
-
-
+    <div className="bg-gray-800 text-white p-4 flex justify-between items-center md:flex-row flex-col">
 
       <NavLink to="/home" className="flex items-center justify-center">
         <img className="h-12 w-12 mr-2" src="santa-claus.png" alt="" />
@@ -41,15 +39,14 @@ const Navbar = () => {
 
 
 
+      <div className="flex items-center justify-center w-full md:w-auto md:order-first order-last">
 
-      <div className="flex items-center justify-center w-full">
-
-        <ul className="flex space-x-8">
+        <ul className="flex space-x-8 md:flex-row flex-col">
 
           <NavLink to={'/home'}>
             <li
               onClick={() => { setIsHome(true), setIsLists(false) }}
-              className={`text-3xl font-bold cursor-pointer hover:color-gray-700 ${isHome ? 'text-sky-400 underline' : ''}`}
+              className={`text-3xl font-bold cursor-pointer hover:color-gray-700 md:mr-8 ${isHome ? 'text-sky-400 underline' : ''}`}
             >
               Home
 
@@ -60,7 +57,7 @@ const Navbar = () => {
           <NavLink to={'/lists'}>
             <li
               onClick={() => { setIsLists(true), setIsHome(false) }}
-              className={`text-3xl font-bold cursor-pointer hover:color-blue-700 ${isLists ? 'text-sky-400 underline' : ''}`}
+              className={`text-3xl font-bold cursor-pointer hover:color-blue-700 md:mr-8 ${isLists ? 'text-sky-400 underline' : ''}`}
             >
 
               Lists
@@ -74,10 +71,7 @@ const Navbar = () => {
 
 
 
-
-
-
-      <ul className="flex space-x-4">
+      <ul className="flex space-x-4 md:flex-row flex-col md:mt-0 mt-4">
         <li className="italic">devanshpatil692@gmail.com</li>
 
         <li
