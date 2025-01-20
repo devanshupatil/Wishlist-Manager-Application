@@ -59,7 +59,11 @@ const Lists = () => {
                 setItems([]);
             }
         } catch (error) {
-            console.error('Error fetching products:', error);
+            if (error instanceof SyntaxError) {
+                console.error('Error parsing JSON:', error);
+            } else {
+                console.error('Error fetching products:', error);
+            }
             setItems([]);
         }
     };
