@@ -31,7 +31,10 @@ const Navbar = () => {
   return (
     <div className="bg-gray-800 text-white p-4 flex justify-between items-center md:flex-row flex-col">
 
-      <NavLink to="/home" className="flex items-center justify-center">
+      <NavLink to="/home" 
+       onClick={() => { setIsHome(true), setIsLists(false) }}
+       className="flex space-x-8 md:flex-row flex-col">
+      
         <img className="h-12 w-12 mr-2" src="santa-claus.png" alt="" />
         <h1 className="text-3xl font-bold italic">Wishlist Manager</h1>
       </NavLink>
@@ -41,7 +44,7 @@ const Navbar = () => {
 
       <div className="flex items-center justify-center w-full md:w-auto md:order-first order-last">
 
-        <ul className="flex space-x-8 md:flex-row flex-col">
+        <ul className="flex items-center justify-center">
 
           <NavLink to={'/home'}>
             <li
