@@ -3,27 +3,44 @@ import Login from './components/Login'
 import Home from './components/Home'
 import Signup from './components/Signup'
 import ForgotPass from './components/ForgotPass'
-import { AuthProvider } from './contexts/AuthContex'
+import { AuthProvider } from './contexts/AuthContext'
 import ResetPassword from './components/ResetPassword'
-import AddItems from './components/AddItems'
-import UpdateItem from './components/UpdateItem'
-// import ProtectedRoute from './utils/ProtectedRoute'
+import Navbar from './components/Navbar'
+// import Demo from './components/Home'
+import Lists from './components/Lists'
 
 function App() {
+
   return (
-    <BrowserRouter>
-      <AuthProvider>
+    <AuthProvider>
+      <BrowserRouter>
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route path="/home" element={<Home/>} />
+          {/* <Route path="/home" element={<Home />} /> */}
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPass />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/add-items" element={<AddItems />} />
-          <Route path="/update-item" element={<UpdateItem />} />
+          <Route
+            path="/Home"
+            element={
+              <div className="w-full h-full flex flex-col">
+                <Navbar />
+                <Home />
+              </div>
+            }
+          />
+          <Route
+            path="/lists"
+            element={
+              <div className="w-full h-full flex flex-col">
+                <Navbar />
+                <Lists />
+              </div>
+            }
+          />
         </Routes>
-      </AuthProvider>
-    </BrowserRouter>
+      </BrowserRouter>
+    </AuthProvider>
   )
 }
 
