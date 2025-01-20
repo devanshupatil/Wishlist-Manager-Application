@@ -46,6 +46,7 @@ const Lists = () => {
         try {
             const response = await fetch(`${URL}/api/products`, {
                 headers: {
+                    'Content-Type': 'application/json',
                     'Authorization': `Bearer ${getAccessToken()}`
                 }
             });
