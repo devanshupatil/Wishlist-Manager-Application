@@ -10,6 +10,7 @@ const Home = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { getAccessToken } = useAuth();
+  const URL = import.meta.env.VITE_BACKEND_URL
 
   const variants = {
     initial: {
@@ -36,14 +37,17 @@ const Home = () => {
 
 
   const [formData, setFormData] = useState({
-    productName: '',
-    productUrl: '',
-    currentPrice: '',
-    targetPrice: '',
+    product_name: '',
+    product_url: '',
+    current_price: '',
+    target_price: '',
     category: '',
     priority: '',
     notes: ''
   });
+
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -56,9 +60,10 @@ const Home = () => {
       addedDate: currentDate
     };
 
+
     try {
 
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/products`, {
+      const response = await fetch(`${URL}/api/products`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -117,9 +122,9 @@ const Home = () => {
                 </label>
                 <input
                   type="text"
-                  name="productName"
+                  name="product_name"
                   required
-                  value={formData.productName}
+                  value={formData.product_name}
                   onChange={handleChange}
                   className="w-full p-3 border rounded-lg transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300"
                   placeholder="Enter product name"
@@ -133,9 +138,9 @@ const Home = () => {
                 </label>
                 <input
                   type="url"
-                  name="productUrl"
+                  name="product_url"
                   required
-                  value={formData.productUrl}
+                  value={formData.product_url}
                   onChange={handleChange}
                   className="w-full p-3 border rounded-lg transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300"
                   placeholder="https://example.com/product"
@@ -150,11 +155,11 @@ const Home = () => {
                   </label>
                   <input
                     type="number"
-                    name="currentPrice"
+                    name="current_price"
                     required
                     min="0"
                     step="0.01"
-                    value={formData.currentPrice}
+                    value={formData.current_price}
                     onChange={handleChange}
                     className="w-full p-3 border rounded-lg transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300"
                     placeholder="0.00"
@@ -166,11 +171,11 @@ const Home = () => {
                   </label>
                   <input
                     type="number"
-                    name="targetPrice"
+                    name="target_price"
                     required
                     min="0"
                     step="0.01"
-                    value={formData.targetPrice}
+                    value={formData.target_price}
                     onChange={handleChange}
                     className="w-full p-3 border rounded-lg transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300"
                     placeholder="0.00"
@@ -252,6 +257,8 @@ const Home = () => {
 
                 {isSubmitting ? 'Adding...' : 'Add New Product'}
                 <ArrowRight className="w-5 h-5 transform transition-transform group-hover:translate-x-1" />
+
+                
               </button>
             </form>
           </div>
