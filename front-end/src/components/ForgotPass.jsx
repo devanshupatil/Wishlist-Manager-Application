@@ -41,7 +41,7 @@ const ForgotPass = () => {
           Reset Password
         </h2>
         <p className="text-center text-gray-600 mb-8">
-          Enter your email address and we'll send you a link to reset your
+          Enter your email address and we&apos;ll send you a link to reset your
           password.
         </p>
 
@@ -87,7 +87,7 @@ const ForgotPass = () => {
             Back to Sign In
             </a>
 
-            <a href="/resetPassword">Reset Password</a>
+            <a href="/reset-password">Reset Password</a>
         </div>
       </div>
     </div>
