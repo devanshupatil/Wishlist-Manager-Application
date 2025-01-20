@@ -35,7 +35,7 @@ const Navbar = () => {
        onClick={() => { setIsHome(true), setIsLists(false) }}
        className="flex space-x-8 md:flex-row flex-col">
       
-        <img className="h-12 w-12 mr-2" src="santa-claus.png" alt="" />
+        <img className="h-12 w-12 mr-2" src="/front-end/santa-claus.png" alt="" />
         <h1 className="text-3xl font-bold italic">Wishlist Manager</h1>
       </NavLink>
 
