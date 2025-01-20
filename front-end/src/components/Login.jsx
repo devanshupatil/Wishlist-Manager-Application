@@ -164,7 +164,7 @@ const Login = () => {
                     Forgot password?
           </a>
           <p className="text-sm text-gray-600">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <a href="/signup" className="text-sm text-blue-600 hover:underline">
               Create an account
             </a>
