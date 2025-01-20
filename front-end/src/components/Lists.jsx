@@ -40,8 +40,14 @@ const Lists = () => {
     const { getAccessToken } = useAuth();
     const searchInputRef = useRef(null);
     const sortSelectRef = useRef(null);
+    const [fetching, setFetching] = useState(false);
+
+    const URL = import.meta.env.VITE_BACKEND_URL
+
+
 
     const fetchProducts = async () => {
+        setFetching(true);
         try {
             const response = await fetch(`${URL}/api/products`, {
                 headers: {
@@ -212,6 +218,18 @@ const Lists = () => {
 
             <div id="itemsList" className="space-y-4">
                 {itemsList}
+            {fetching && (
+                <div className="flex items-center justify-center h-40">
+                    <motion.div
+                        initial={{ scale: 0.5 }}
+                        animate={{ scale: 1 }}
+                        transition={{ ease: 'easeInOut', duration: 1 }}
+                        className="animate-spin h-5 w-5 border-b-2 border-gray-900 rounded-full"
+                    />
+                </div>
+            )}
+            
+
                 {items.length === 0 && <p className="text-gray-600">No items found.</p>}
             </div>
         </div>
