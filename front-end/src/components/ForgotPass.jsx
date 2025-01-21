@@ -1,22 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { supabase } from '../config/supabase';
-import { useAuth } from '../contexts/AuthContext';
 
 const ForgotPass = () => {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { getAccessToken } = useAuth();
 
-  useEffect(() => {
-    const token = getAccessToken();
 
-    if (!token) {
-      window.location.href = '/';
-    } else {
-      window.location.href = '/home';
-    }
-  }, []);
   
 
   const handleSubmit = async (e) => {
@@ -99,7 +89,6 @@ const ForgotPass = () => {
             Back to Sign In
             </a>
 
-            <a href="/reset-password">Reset Password</a>
         </div>
       </div>
     </div>
