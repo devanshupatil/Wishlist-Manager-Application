@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom'
 import { supabase } from '../config/supabase'
 import { toast } from 'react-toastify'
 import Icon from '../img/santa-claus.png';
+import { useLocation } from 'react-router-dom';
 
 
 
@@ -12,8 +13,7 @@ const Navbar = () => {
   const [isHome, setIsHome] = React.useState(false);
   const [isLists, setIsLists] = React.useState(true);
   const [profile, setProfile] = useState(null);
-
-
+  const location = useLocation();
 
   const handleLogout = async () => {
     try {
@@ -30,19 +30,27 @@ const Navbar = () => {
     }
   };
 
+  const fetchProfile = async () => {
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      setProfile(user);
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+    }
+  };
+
+  
+
+
   React.useEffect(() => {
 
-    const fetchProfile = async () => {
 
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
-        setProfile(user);
-      } catch (error) {
-        console.error('Error fetching user profile:', error);
-      }
-    };
+    setIsHome(location.pathname === '/home');
+    setIsLists(location.pathname === '/lists');
+
     fetchProfile();
-  }, []);
+  }, [location.pathname]);
   
 
 

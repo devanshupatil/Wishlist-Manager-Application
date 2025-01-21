@@ -4,8 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import { useParams } from 'react-router-dom';
-import { Plus } from 'lucide-react';
-import Navbar from './Navbar';
+// import Navbar from './Navbar';
 
 
 
@@ -35,18 +34,17 @@ const itemVariants = {
 const UpdateItem = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
-    name: '',
-    productUrl: '',
-    currentPrice: '',
-    targetPrice: '',
+    product_name: '',
+    product_url: '',
+    current_price: '',
+    target_price: '',
     category: '',
     priority: '',
-    notes: '',
-  });
+    notes: ''});
   const { getAccessToken } = useAuth();
   const URL = import.meta.env.VITE_BACKEND_URL;
   const { id } = useParams();
-  const [item, setItem] = useState(null);
+  const [item, setItem] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
 
   const fetchItem = async () => {
@@ -110,7 +108,7 @@ const UpdateItem = () => {
       toast.success('Item updated successfully');
 
       window.history.back();
-      Navbar({ isHome: false, isLists: true });
+      // Navbar({ isHome: false, isLists: true });
 
 
     } catch (error) {

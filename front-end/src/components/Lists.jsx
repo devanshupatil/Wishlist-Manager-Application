@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useEffect } from 'react';
 import { toast } from 'react-hot-toast';
-import { Calendar, PencilLine, Trash2} from "lucide-react";
+import { Calendar, PencilLine, Trash2 } from "lucide-react";
 import { FormatDate } from '../utlis/formatDate';
 import { motion } from 'framer-motion';
 import { useRef } from 'react';
-import Navbar from './Navbar';
+// import Navbar from './Navbar';
 import { Link } from 'react-router-dom';
 
 const variants = {
@@ -73,6 +73,7 @@ const Lists = () => {
             console.error('Error fetching products:', error);
             setItems([]);
         }
+        setFetching(false);
     };
 
     useEffect(() => {
@@ -152,17 +153,17 @@ const Lists = () => {
             )}
             <div className="flex justify-end mb-4 space-x-2">
 
-                <button
-                    className="p-2 rounded-[0.2rem] bg-white border border-[#c7c7c7]  hover:bg-transparent group hover:border-blue-500"
-                    onClick={() => window.location.href = '/update-item/' + item.id}
-                >
-                    <a href={`/update-item/${item.id}`}>
+                <Link to={`/update-item/${item.id}`}>
+                    <button
+                        className="p-2 rounded-[0.2rem] bg-white border border-[#c7c7c7]  hover:bg-transparent group hover:border-blue-500"
+                    // onClick={() => window.location.href = '/update-item/' + item.id}
+                    >
                         <PencilLine
                             className="text-blue-500 group-hover:text-blue-500"
                             size={20}
                         />
-                    </a>
-                </button>
+                    </button>
+                </Link>
 
                 <button
                     className="p-2 rounded-[0.2rem] bg-white border border-[#c7c7c7]  hover:bg-transparent group hover:border-pink-500"
@@ -196,6 +197,7 @@ const Lists = () => {
             <p className="item-description text-gray-600 mb-1">Description: <span className="font-semibold">{item.notes || 'No description available'} </span> </p>
         </motion.div>
     )) : [];
+
 
 
 
@@ -254,21 +256,21 @@ const Lists = () => {
                         <option value="medium">Show Medium Priority Only</option>
                         <option value="low">Show Low Priority Only</option>
                     </select>
-                        
-                        <Link to={'/home'}>
+
+                    <Link to={'/home'}>
                         <button
                             className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded"
-                           
+
 
                         >
                             Add Item
                         </button>
-                        </Link>
+                    </Link>
                 </div>
             </div>
 
-            <div id="itemsList" className="flex flex-wrap gap-6">
-           
+            <div id="itemsList" className="flex flex-wrap  gap-6">
+
                 {itemsList}
                 {fetching && (
                     <div className="flex items-center justify-center h-40">
