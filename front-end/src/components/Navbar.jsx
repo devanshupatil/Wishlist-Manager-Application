@@ -9,8 +9,8 @@ import Icon from '../img/santa-claus.png';
 const Navbar = () => {
 
   const [loading, setLoading] = useState(false);
-  const [isHome, setIsHome] = React.useState(true);
-  const [isLists, setIsLists] = React.useState(false);
+  const [isHome, setIsHome] = React.useState(false);
+  const [isLists, setIsLists] = React.useState(true);
   const [profile, setProfile] = useState(null);
 
 

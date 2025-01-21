@@ -1,4 +1,4 @@
-import { Plus, ArrowRight } from 'lucide-react';
+import {  ArrowRight } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { motion } from 'framer-motion';
@@ -41,7 +41,7 @@ const Home = () => {
     if (!token) {
       window.location.href = '/';
     } else {
-      window.location.href = '/lists';
+      // window.location.href = '/lists';
     }
   }, []);
 
@@ -132,7 +132,7 @@ const Home = () => {
           <div className="space-y-1">
           </div>
           <div>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6 p-10">
               {/* Product Name */}
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700">

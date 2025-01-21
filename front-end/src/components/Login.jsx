@@ -4,6 +4,7 @@ import { toast } from 'react-hot-toast';
 import { supabase } from '../config/supabase';
 import { useEffect } from 'react';
 import { Lock, Eye, EyeOff} from 'lucide-react';
+import Navbar from './Navbar';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -28,6 +29,7 @@ const Login = () => {
       } else {
         toast.success('Login successful');
         navigate('/lists', { replace: true });
+        Navbar({ isHome: false, isLists: true });
       }
     } catch (error) {
       console.error('Error logging in:', error);
@@ -47,6 +49,7 @@ const Login = () => {
         toast.error('google login failed');
         console.error('google login error:', error);
       } else if (data) {
+        // navigate('/lists', { replace: true });
         toast.success('google login successful');
       }
     } catch (error) {
@@ -60,8 +63,11 @@ const Login = () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
         navigate('/lists', { replace: true });
+        Navbar({ isHome: false, isLists: true });
+
       }
     };
+
     checkSession();
   }, [navigate]);
 

@@ -4,10 +4,11 @@ import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useEffect } from 'react';
 import { toast } from 'react-hot-toast';
-import { Calendar, PencilLine, Trash2 } from "lucide-react";
+import { Calendar, PencilLine, Trash2, Plus } from "lucide-react";
 import { FormatDate } from '../utlis/formatDate';
 import { motion } from 'framer-motion';
 import { useRef } from 'react';
+import Navbar from './Navbar';
 
 
 const variants = {
@@ -81,7 +82,7 @@ const Lists = () => {
         if (!token) {
             window.location.href = '/';
         } else {
-            window.location.href = '/lists';
+            // window.location.href = '/lists';
         }
 
         fetchProducts();
@@ -137,7 +138,7 @@ const Lists = () => {
 
         <motion.div
             key={item.id}
-            className={`item-card bg-white shadow-lg rounded-lg p-6 mb-6 ${item.current_price <= item.target_price ? 'border-green-500 border-2' : ''}`}
+            className={`item-card bg-white shadow-lg rounded-lg p-6 mb-6 w-[400px] hover:bg-gray-50  ${item.current_price <= item.target_price ? 'border-green-500 border-2' : ''}`}
             variants={variants}
             initial="initial"
             animate="animate"
@@ -145,8 +146,8 @@ const Lists = () => {
         >
             {item.current_price <= item.target_price && (
                 <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded-r" role="alert">
-                    <p className="font-bold">Great news!</p>
-                    <p>The price has reached or dropped below your target. It&apos;s time to make your purchase!</p>
+                    <p className="font-bold">You Can By Now </p>
+                    {/* <p>The price has reached or dropped below your target. It&apos;s time to make your purchase!</p> */}
                 </div>
             )}
             <div className="flex justify-end mb-4 space-x-2">
@@ -253,10 +254,19 @@ const Lists = () => {
                         <option value="medium">Show Medium Priority Only</option>
                         <option value="low">Show Low Priority Only</option>
                     </select>
+
+                    <button
+                        className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded"
+                        onClick={() => { window.location.href = '/home'; Navbar({ isHome: true, isLists: false }); }}
+
+                    >
+                        Add Item
+                    </button>
                 </div>
             </div>
 
-            <div id="itemsList" className="space-y-4">
+            <div id="itemsList" className="flex flex-wrap gap-6">
+           
                 {itemsList}
                 {fetching && (
                     <div className="flex items-center justify-center h-40">

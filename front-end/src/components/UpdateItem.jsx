@@ -158,12 +158,7 @@ const UpdateItem = () => {
         className="bg-card rounded-lg shadow-lg"
       >
 
-        <h1
-          className="text-2xl font-bold text-gray-900 flex items-center justify-center gap-2"
-        >
-          <Plus className="w-6 h-6" />
-          Update Item
-        </h1>
+        
         <form onSubmit={handleSubmit} className="space-y-6 max-w-xl mx-auto p-8 bg-gray-10 rounded-lg shadow-lg transition-all duration-200">
           {showSuccess && (
             <motion.div
