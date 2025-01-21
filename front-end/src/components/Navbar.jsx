@@ -10,6 +10,7 @@ const Navbar = () => {
   const [loading, setLoading] = useState(false);
   const [isHome, setIsHome] = React.useState(true);
   const [isLists, setIsLists] = React.useState(false);
+  const [profile, setProfile] = useState(null);
 
 
 
@@ -27,6 +28,22 @@ const Navbar = () => {
       setLoading(false);
     }
   };
+
+  React.useEffect(() => {
+
+    const fetchProfile = async () => {
+
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        setProfile(user);
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+      }
+    };
+    fetchProfile();
+  }, []);
+  
+
 
   return (
     <div className="bg-gray-800 text-white p-4 flex justify-between items-center md:flex-row flex-col">
@@ -75,7 +92,7 @@ const Navbar = () => {
 
 
       <ul className="flex space-x-4 md:flex-row flex-col md:mt-0 mt-4">
-        <li className="italic">devanshpatil692@gmail.com</li>
+        <li className="italic">{profile?.email}</li>
 
         <li
           onClick={handleLogout}
