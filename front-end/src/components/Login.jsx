@@ -27,7 +27,7 @@ const Login = () => {
         console.error('Login error:', error);
       } else {
         toast.success('Login successful');
-        navigate('/home', { replace: true });
+        navigate('/lists', { replace: true });
       }
     } catch (error) {
       console.error('Error logging in:', error);
@@ -59,7 +59,7 @@ const Login = () => {
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        navigate('/home', { replace: true });
+        navigate('/lists', { replace: true });
       }
     };
     checkSession();

@@ -41,7 +41,7 @@ const Home = () => {
     if (!token) {
       window.location.href = '/';
     } else {
-      document.title = 'Wishlist Manager';
+      window.location.href = '/lists';
     }
   }, []);
 
@@ -127,13 +127,9 @@ const Home = () => {
 
 
 
-        <div className="w-full max-w-2xl transform transition-all duration-500 hover:shadow-xl animate-fade-in">
+        <div className="w-full max-w-2xl transform transition-all duration-500 hover:shadow-xl animate-fade-in padding-10">
 
           <div className="space-y-1">
-            <h2 className="text-2xl font-bold text-center flex items-center justify-center gap-2">
-              <Plus className="w-6 h-6" />
-              Add New Product
-            </h2>
           </div>
           <div>
             <form onSubmit={handleSubmit} className="space-y-6">

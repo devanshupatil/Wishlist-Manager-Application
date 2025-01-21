@@ -49,8 +49,8 @@ const Navbar = () => {
   return (
     <div className="bg-gray-800 text-white px-4 py-2 flex justify-between md:flex-row flex-col md:space-x-4 space-x-0">
 
-      <NavLink to="/home" 
-       onClick={() => { setIsHome(true), setIsLists(false) }}
+      <NavLink to="/lists" 
+       onClick={() => { setIsHome(false), setIsLists(true) }}
        className="flex md:flex-row flex-col space-x-1 md:order-first order-last">
 
         <img className="h-12 w-12 mr-2 flex items-center justify-center"  src={Icon} alt="img" />
