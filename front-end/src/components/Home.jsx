@@ -98,6 +98,8 @@ const Home = () => {
         notes: ''
       });
 
+      window.location.href = '/lists';
+
     } catch (error) {
       toast.error('Failed to add item');
       console.error('Error:', error);
