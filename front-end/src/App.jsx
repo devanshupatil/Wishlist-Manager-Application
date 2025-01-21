@@ -6,8 +6,10 @@ import ForgotPass from './components/ForgotPass'
 import { AuthProvider } from './contexts/AuthContext'
 import ResetPassword from './components/ResetPassword'
 import Navbar from './components/Navbar'
-// import Demo from './components/Home'
 import Lists from './components/Lists'
+import UpdateItem from './components/UpdateItem'
+
+
 
 function App() {
 
@@ -16,10 +18,11 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Login />} />
-          {/* <Route path="/home" element={<Home />} /> */}
           <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPass />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+         
+
           <Route
             path="/Home"
             element={
@@ -35,6 +38,15 @@ function App() {
               <div className="w-full h-full flex flex-col">
                 <Navbar />
                 <Lists />
+              </div>
+            }
+          />
+          <Route
+            path="/update-item/:id"
+            element={
+              <div className="w-full h-full flex flex-col">
+                <Navbar />
+                <UpdateItem />
               </div>
             }
           />
