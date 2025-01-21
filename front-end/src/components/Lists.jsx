@@ -100,7 +100,7 @@ const Lists = () => {
     const handleDelete = async (id) => {
         try {
 
-            const response = await fetch(`${URL}/api/products/`, {
+            const response = await fetch(`${URL}/api/products/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -120,6 +120,11 @@ const Lists = () => {
         }
     };
 
+  
+
+
+       
+
     const itemsList = Array.isArray(items) ? items.map(item => (
 
         <motion.div
@@ -136,15 +141,15 @@ const Lists = () => {
                     <p>The price has reached or dropped below your target. It&apos;s time to make your purchase!</p>
                 </div>
             )}
-            <div className="flex justify-end mb-4">
+            <div className="flex justify-end mb-4 space-x-2">
 
                 <button
                     className="p-2 rounded-[0.2rem] bg-white border border-[#c7c7c7]  hover:bg-transparent group hover:border-blue-500"
                     onClick={() => window.location.href = '/update-item/' + item.id}
                 >
-                    <a href={`/`}>
+                    <a href={`/update-item/${item.id}`}>
                         <PencilLine
-                            className="text-black group-hover:text-blue-500"
+                            className="text-blue-500 group-hover:text-blue-500"
                             size={20}
                         />
                     </a>
@@ -155,13 +160,13 @@ const Lists = () => {
                     onClick={() => handleDelete(item.id)}
                 >
                     <Trash2
-                        className="text-black group-hover:text-pink-500"
+                        className="text-pink-500 group-hover:text-pink-500"
                         size={20}
                     />
                 </button>
 
-                <div className="gap-x-2 flex ">
-                    <Calendar className="text-black" size={20} />
+                <div className="gap-x-2 flex  items-center">
+                    <Calendar className="text-sky-400" size={20} />
                     {FormatDate(item.added_date)}
                 </div>
 
@@ -177,12 +182,13 @@ const Lists = () => {
             </p>
             <p className="item-current-price text-gray-700 mb-1">Current Price: <span className="font-semibold">₹{item.current_price ? item.current_price.toLocaleString('en-IN') : 'N/A'}</span></p>
             <p className="item-target-price text-gray-700 mb-1">Target Price: <span className="font-semibold">₹{item.target_price ? item.target_price.toLocaleString('en-IN') : 'N/A'}</span></p>
-            <p className="item-description text-gray-600 mb-1">Description: <span className="font-semibold">{item.notes || 'No description available'} </span> </p>
             <p className="item-category text-gray-700 mb-1">Category: <span className="font-semibold">{item.category}</span></p>
             <p className="item-priority text-gray-700">Priority: <span className="font-semibold">{item.priority}</span></p>
-            <p className="item-created-at text-gray-700">Created At: <span className="font-semibold">{new Date(item.added_date).toLocaleDateString()}</span></p>
+            <p className="item-description text-gray-600 mb-1">Description: <span className="font-semibold">{item.notes || 'No description available'} </span> </p>
         </motion.div>
     )) : [];
+
+    
 
 
 
@@ -193,7 +199,7 @@ const Lists = () => {
             <div className="flex justify-between items-center mb-4">
                 <h5 className="text-xl font-semibold">Your Wishlist Items</h5>
             </div>
-            <div className="grid md:grid-cols-2 gap-4 mb-6">
+            <div className="grid md:grid-cols-2 gap-4 mb-6 ">
                 <input
                     type="text"
                     className="w-full px-3 py-2 border border-gray-300 rounded"
@@ -202,18 +208,44 @@ const Lists = () => {
                     ref={searchInputRef}
                     onChange={handleSearch}
                 />
-                <select
-                    className="w-full px-3 py-2 border border-gray-300 rounded"
-                    id="sortSelect"
-                    ref={sortSelectRef}
-                    onChange={(e) => {
-                        handleSort(e);
-                        toast.success('Sorting updated');
-                    }}
-                >
-                    <option value="date">Sort by Date</option>
-                    <option value="price">Sort by Price</option>
-                </select>
+                <div className="flex gap-4">
+                    <select
+                        className="w-32 px-3 py-2 border border-gray-300 rounded"
+                        id="sortSelect"
+                        ref={sortSelectRef}
+                        onChange={(e) => {
+                            handleSort(e);
+                            toast.success('Sorting updated');
+                        }}
+                    >
+                        <option value="date">Sort by Date</option>
+                        <option value="price">Sort by Price</option>
+                    </select>
+
+                    <select
+                        className="w-42 px-3 py-2 border border-gray-300 rounded"
+                        id="sortSelect"
+                        onChange={(e) => {
+                            let filteredItems = [...items];
+                            if (e.target.value === 'high') {
+                                filteredItems = filteredItems.filter(item => item.priority === 'high');
+                            } else if (e.target.value === 'medium') {
+                                filteredItems = filteredItems.filter(item => item.priority === 'medium');
+                            } else if (e.target.value === 'low') {
+                                filteredItems = filteredItems.filter(item => item.priority === 'low');
+                            }
+                            else if (e.target.value === 'all') {
+                                filteredItems = fetchProducts();
+                            }
+                            setItems(filteredItems);
+                        }}
+                    >
+                        <option value="all">Show All</option>
+                        <option value="high">Show High Priority Only</option>
+                        <option value="medium">Show Medium Priority Only</option>
+                        <option value="low">Show Low Priority Only</option>
+                    </select>
+                </div>
             </div>
 
             <div id="itemsList" className="space-y-4">
