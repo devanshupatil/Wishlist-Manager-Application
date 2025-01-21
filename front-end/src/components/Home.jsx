@@ -1,5 +1,5 @@
 import { Plus, ArrowRight } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
@@ -34,6 +34,16 @@ const Home = () => {
       },
     },
   };
+
+  useEffect(() => {
+    const token = getAccessToken();
+
+    if (!token) {
+      window.location.href = '/';
+    } else {
+      document.title = 'Wishlist Manager';
+    }
+  }, []);
 
 
   const [formData, setFormData] = useState({

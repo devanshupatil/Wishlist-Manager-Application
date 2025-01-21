@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../config/supabase';
 import { Lock, Eye, EyeOff} from 'lucide-react';
+import {useAuth} from '../contexts/AuthContext';
 
 
 const Signup = () => {
@@ -13,9 +14,19 @@ const Signup = () => {
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const navigate = useNavigate();
-
+  const { getAccessToken } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  useEffect(() => {
+    const token = getAccessToken();
+
+    if (!token) {
+      window.location.href = '/';
+    } else {
+      window.location.href = '/home';
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

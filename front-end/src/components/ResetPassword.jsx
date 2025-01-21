@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Lock, Eye, EyeOff, CheckCircle, XCircle } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { supabase } from '../config/supabase';
+import { useAuth } from '../contexts/AuthContext';
 
 const ResetPassword = () => {
     const [formData, setFormData] = useState({
@@ -12,6 +13,7 @@ const ResetPassword = () => {
       const [showConfirmPassword, setShowConfirmPassword] = useState(false);
       const [isSubmitting, setIsSubmitting] = useState(false);
       const [resetStatus, setResetStatus] = useState(null);
+      const { getAccessToken } = useAuth();
     
       const passwordRequirements = [
         { label: 'At least 8 characters', test: pwd => pwd.length >= 8 },
@@ -28,6 +30,18 @@ const ResetPassword = () => {
           [name]: value
         }));
       };
+
+      useEffect(() => {
+        const token = getAccessToken();
+    
+        if (!token) {
+          window.location.href = '/';
+        } else {
+          window.location.href = '/home';
+        }
+      }, []);
+
+      
     
       const handleSubmit = async (e) => {
         e.preventDefault();
