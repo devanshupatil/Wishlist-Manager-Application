@@ -17,6 +17,20 @@ const getProducts = async (req, res) => {
     }
 };
 
+const getProductById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const product = await products.getById(id);
+
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+        res.status(200).json(product);
+    } catch (error) {
+        res.status(500).json({ message: "Server Error", error: error.message });
+    }
+};
+
 const createProduct = async (req, res) => {
     try {
         const { name, productUrl, currentPrice, targetPrice, notes, category, priority } = req.body;
@@ -74,7 +88,7 @@ const updateProduct = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
     try {
-        const { id } = req.body;
+        const { id } = req.params;
         const { error } = await supabase
             .from('products')
             .delete()
@@ -95,4 +109,5 @@ module.exports = {
     createProduct,
     updateProduct,
     deleteProduct,
+    getProductById,
 };
