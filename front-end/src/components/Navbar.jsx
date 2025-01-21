@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { supabase } from '../config/supabase'
 import { toast } from 'react-toastify'
+import Icon from '../img/santa-claus.png';
 
 
 
@@ -46,14 +47,15 @@ const Navbar = () => {
 
 
   return (
-    <div className="bg-gray-800 text-white p-4 flex justify-between items-center md:flex-row flex-col">
+    <div className="bg-gray-800 text-white px-4 py-2 flex justify-between md:flex-row flex-col md:space-x-4 space-x-0">
 
       <NavLink to="/home" 
        onClick={() => { setIsHome(true), setIsLists(false) }}
-       className="flex space-x-8 md:flex-row flex-col">
+       className="flex md:flex-row flex-col space-x-1 md:order-first order-last">
+
+        <img className="h-12 w-12 mr-2 flex items-center justify-center"  src={Icon} alt="img" />
       
-        <img className="h-12 w-12 mr-2" src="/front-end/santa-claus.png" alt="" />
-        <h1 className="text-3xl font-bold italic">Wishlist Manager</h1>
+        <h1 className="text-3xl font-bold italic  flex items-center justify-center">Wishlist Manager</h1>
       </NavLink>
 
 
@@ -61,7 +63,7 @@ const Navbar = () => {
 
       <div className="flex items-center justify-center w-full md:w-auto md:order-first order-last">
 
-        <ul className="flex items-center justify-center">
+        <ul className="flex items-center justify-center space-x-4 md:flex-row flex-col">
 
           <NavLink to={'/home'}>
             <li
@@ -91,7 +93,7 @@ const Navbar = () => {
 
 
 
-      <ul className="flex space-x-4 md:flex-row flex-col md:mt-0 mt-4">
+      <ul className="flex items-center justify-center space-x-4  md:flex-row flex-col md:mt-0 mt-4">
         <li className="italic">{profile?.email}</li>
 
         <li
