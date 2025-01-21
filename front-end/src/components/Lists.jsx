@@ -292,8 +292,6 @@ const Lists = () => {
                     </div>
                 )}
 
-
-                {items.length === 0 && <p className="text-gray-600">No items found.</p>}
             </div>
         </div>
     )
