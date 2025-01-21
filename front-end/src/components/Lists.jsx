@@ -272,15 +272,6 @@ const Lists = () => {
 
             <div id="itemsList" className="flex flex-wrap  gap-6">
 
-                {items.length === 0 && (
-                    <div className="flex items-center justify-center h-full">
-                        <h1 className="text-center mt-10 text-green-600">You have no items in your wishlist, Please add some!</h1>
-                    </div>
-                )}
-                
-
-
-                {itemsList}
                 {fetching && (
                     <div className="flex items-center justify-center h-40">
                         <motion.div
@@ -289,6 +280,15 @@ const Lists = () => {
                             transition={{ ease: 'easeInOut', duration: 1 }}
                             className="animate-spin h-5 w-5 border-b-2 border-gray-900 rounded-full"
                         />
+                    </div>
+                )}
+                
+
+
+                {itemsList}
+                {items.length === 0 && (
+                    <div className="flex items-center justify-center h-full">
+                        <h1 className="text-center mt-10 text-green-600">You have no items in your wishlist, Please add some!</h1>
                     </div>
                 )}
 
