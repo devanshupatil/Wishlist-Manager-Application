@@ -2,7 +2,7 @@ import { Plus, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { motion } from 'framer-motion';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 
 
 
@@ -37,10 +37,10 @@ const Home = () => {
 
 
   const [formData, setFormData] = useState({
-    product_name: '',
-    product_url: '',
-    current_price: '',
-    target_price: '',
+    name: '',
+    productUrl: '',
+    currentPrice: '',
+    targetPrice: '',
     category: '',
     priority: '',
     notes: ''
@@ -73,8 +73,20 @@ const Home = () => {
       });
       const data = await response.json();
 
-      console.log('Submitted:', data);
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to add item');
+      }
+
       toast.success('Item added successfully');
+      setFormData({
+        name: '',
+        productUrl: '',
+        currentPrice: '',
+        targetPrice: '',
+        category: '',
+        priority: '',
+        notes: ''
+      });
 
     } catch (error) {
       toast.error('Failed to add item');
@@ -122,9 +134,9 @@ const Home = () => {
                 </label>
                 <input
                   type="text"
-                  name="product_name"
+                  name="name"
                   required
-                  value={formData.product_name}
+                  value={formData.name}
                   onChange={handleChange}
                   className="w-full p-3 border rounded-lg transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300"
                   placeholder="Enter product name"
@@ -138,9 +150,9 @@ const Home = () => {
                 </label>
                 <input
                   type="url"
-                  name="product_url"
+                  name="productUrl"
                   required
-                  value={formData.product_url}
+                  value={formData.productUrl}
                   onChange={handleChange}
                   className="w-full p-3 border rounded-lg transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300"
                   placeholder="https://example.com/product"
@@ -155,11 +167,11 @@ const Home = () => {
                   </label>
                   <input
                     type="number"
-                    name="current_price"
+                    name="currentPrice"
                     required
                     min="0"
                     step="0.01"
-                    value={formData.current_price}
+                    value={formData.currentPrice}
                     onChange={handleChange}
                     className="w-full p-3 border rounded-lg transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300"
                     placeholder="0.00"
@@ -171,11 +183,11 @@ const Home = () => {
                   </label>
                   <input
                     type="number"
-                    name="target_price"
+                    name="targetPrice"
                     required
                     min="0"
                     step="0.01"
-                    value={formData.target_price}
+                    value={formData.targetPrice}
                     onChange={handleChange}
                     className="w-full p-3 border rounded-lg transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300"
                     placeholder="0.00"
