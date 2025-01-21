@@ -61,6 +61,7 @@ const Lists = () => {
                 throw new Error('Failed to fetch products');
             }
 
+
             const data = await response.json();
 
             if (Array.isArray(data)) {
@@ -270,6 +271,10 @@ const Lists = () => {
             </div>
 
             <div id="itemsList" className="flex flex-wrap  gap-6">
+
+                {items.length === 0 && <p className="text-center mt-10">You have no items in your wishlist, Please add some!</p>}
+                
+
 
                 {itemsList}
                 {fetching && (
