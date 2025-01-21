@@ -4,12 +4,12 @@ import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useEffect } from 'react';
 import { toast } from 'react-hot-toast';
-import { Calendar, PencilLine, Trash2, Plus } from "lucide-react";
+import { Calendar, PencilLine, Trash2} from "lucide-react";
 import { FormatDate } from '../utlis/formatDate';
 import { motion } from 'framer-motion';
 import { useRef } from 'react';
 import Navbar from './Navbar';
-
+import { Link } from 'react-router-dom';
 
 const variants = {
     initial: {
@@ -254,14 +254,16 @@ const Lists = () => {
                         <option value="medium">Show Medium Priority Only</option>
                         <option value="low">Show Low Priority Only</option>
                     </select>
+                        
+                        <Link to={'/home'}>
+                        <button
+                            className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded"
+                           
 
-                    <button
-                        className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded"
-                        onClick={() => { window.location.href = '/home'; Navbar({ isHome: true, isLists: false }); }}
-
-                    >
-                        Add Item
-                    </button>
+                        >
+                            Add Item
+                        </button>
+                        </Link>
                 </div>
             </div>
 
