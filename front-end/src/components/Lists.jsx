@@ -284,9 +284,9 @@ const Lists = () => {
                 )}
                 
 
-
                 {itemsList}
-                {items.length === 0 && (
+
+                {items.length === 0 && fetching === false && (
                     <div className="flex items-center justify-center h-full">
                         <h1 className="text-center mt-10 text-green-600">You have no items in your wishlist, Please add some!</h1>
                     </div>
