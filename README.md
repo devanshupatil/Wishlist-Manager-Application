@@ -35,7 +35,7 @@ Simplified Amazon Wishlist Manager (Student Level Project)
 5. Basic sorting (by price/date)
 6. Simple search by name
 
-## Future Improvement Possibilities:
+## Future Improvements :
 
 1. User login
 2. Image URL storage
