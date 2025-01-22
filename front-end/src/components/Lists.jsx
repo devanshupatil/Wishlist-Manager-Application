@@ -97,8 +97,8 @@ const Lists = () => {
         setItems(filteredItems);
     };
 
-    const handleSort = () => {
-        const sortOption = sortSelectRef.current.value;
+    const handleSort = (e) => {
+        const sortOption = e.target.value;
         let sortedItems = [...items];
         if (sortOption === 'date') {
             sortedItems.sort((a, b) => new Date(b.added_date) - new Date(a.added_date));
@@ -227,7 +227,6 @@ const Lists = () => {
                         ref={sortSelectRef}
                         onChange={(e) => {
                             handleSort(e);
-                            toast.success('Sorting updated');
                         }}
                     >
                         <option value="date">Sort by Date</option>
@@ -260,9 +259,8 @@ const Lists = () => {
 
                     <Link to={'/home'}>
                         <button
-                            className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded"
-
-
+                            className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded
+                            sm:w-auto w-full flex items-center justify-center"
                         >
                             Add Item
                         </button>
