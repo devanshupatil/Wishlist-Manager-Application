@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 
 
@@ -11,6 +12,7 @@ const Home = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { getAccessToken } = useAuth();
   const URL = import.meta.env.VITE_BACKEND_URL
+  const { t } = useTranslation();
 
   const variants = {
     initial: {
@@ -87,7 +89,7 @@ const Home = () => {
         throw new Error(data.message || 'Failed to add item');
       }
 
-      toast.success('Item added successfully');
+      toast.success(t('Item added successfully'));
       setFormData({
         name: '',
         productUrl: '',
@@ -101,7 +103,7 @@ const Home = () => {
       window.location.href = '/lists';
 
     } catch (error) {
-      toast.error('Failed to add item');
+      toast.error(t('Failed to add item'));
       console.error('Error:', error);
     } finally {
       setIsSubmitting(false);
@@ -138,7 +140,7 @@ const Home = () => {
               {/* Product Name */}
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700">
-                  Product Name *
+                  {t('Product Name')} *
                 </label>
                 <input
                   type="text"
@@ -147,14 +149,14 @@ const Home = () => {
                   value={formData.name}
                   onChange={handleChange}
                   className="w-full p-3 border rounded-lg transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300"
-                  placeholder="Enter product name"
+                  placeholder={t('Enter product name')}
                 />
               </div>
 
               {/* Product URL */}
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700">
-                  Product URL *
+                  {t('Product URL')} *
                 </label>
                 <input
                   type="url"
@@ -171,7 +173,7 @@ const Home = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-gray-700">
-                    Current Price *
+                   {t('Current Price')} *
                   </label>
                   <input
                     type="number"
@@ -187,7 +189,7 @@ const Home = () => {
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-gray-700">
-                    Target Price *
+                    {t('Target Price')} *
                   </label>
                   <input
                     type="number"
@@ -206,7 +208,7 @@ const Home = () => {
               {/* Category */}
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700">
-                  Category *
+                  {t('Category')} *
                 </label>
                 <select
                   name="category"
@@ -215,22 +217,22 @@ const Home = () => {
                   onChange={handleChange}
                   className="w-full p-3 border rounded-lg transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300"
                 >
-                  <option value="">Select a category</option>
-                  <option value="electronics">Electronics</option>
-                  <option value="clothing">Clothing</option>
-                  <option value="books">Books</option>
-                  <option value="home">Home & Kitchen</option>
-                  <option value="other">Other</option>
+                <option value="">{t('Select a category')}</option>
+                  <option value="electronics">{t('Electronics')}</option>
+                  <option value="clothing">{t('Clothing')}</option>
+                  <option value="books">{t('Books')}</option>
+                  <option value="home">{t('Home & Kitchen')}</option>
+                  <option value="other">{t('Other')}</option>
                 </select>
               </div>
 
               {/* Priority */}
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700">
-                  Priority *
+                  {t('Priority')} *
                 </label>
                 <div className="flex gap-4">
-                  {['low', 'medium', 'high'].map((priority) => (
+                  {[t('Low'), t('Medium'), t('High')].map((priority) => (
                     <label
                       key={priority}
                       className="flex items-center space-x-2 cursor-pointer"
@@ -252,7 +254,7 @@ const Home = () => {
               {/* Notes */}
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700">
-                  Notes (Optional)
+                 {t('Notes (Optional)')}
                 </label>
                 <textarea
                   name="notes"
@@ -260,7 +262,7 @@ const Home = () => {
                   onChange={handleChange}
                   rows="3"
                   className="w-full p-3 border rounded-lg transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300"
-                  placeholder="Add any additional notes here..."
+                  placeholder={t('Add any additional notes here...')}
                 />
               </div>
 
@@ -275,7 +277,7 @@ const Home = () => {
                      flex items-center justify-center gap-2 group"
               >
 
-                {isSubmitting ? 'Adding...' : 'Add New Product'}
+                {isSubmitting ? t('Adding...') : t('Add New Product')}
                 <ArrowRight className="w-5 h-5 transform transition-transform group-hover:translate-x-1" />
 
                 

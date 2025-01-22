@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import { useParams } from 'react-router-dom';
-// import Navbar from './Navbar';
+import { useTranslation } from 'react-i18next';
 
 
 
@@ -46,6 +46,7 @@ const UpdateItem = () => {
   const { id } = useParams();
   const [item, setItem] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
+  const { t } = useTranslation();
 
   const fetchItem = async () => {
     try {
@@ -102,17 +103,17 @@ const UpdateItem = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Failed to update item');
+        throw new Error(data.message || t('Failed to update item'));
       }
 
-      toast.success('Item updated successfully');
+      toast.success(t('Item updated successfully'));
 
       window.history.back();
       // Navbar({ isHome: false, isLists: true });
 
 
     } catch (error) {
-      toast.error('Failed to update item');
+      toast.error(t('Failed to update item'));
       console.error('Error:', error);
     } finally {
       setIsSubmitting(false);
@@ -124,18 +125,18 @@ const UpdateItem = () => {
   };
 
   const categories = [
-    'Electronics',
-    'Clothing',
-    'Books',
-    'Home & Garden',
-    'Sports',
-    'Others'
+    t('Electronics'),
+    t('Clothing'),
+    t('Books'),
+    t('Home & Kitchen'),
+    t('Sports'),
+    t('Others')
   ];
 
   const priorities = [
-    'Low',
-    'Medium',
-    'High'
+    t('Low'),
+    t('Medium'),
+    t('High')
   ];
 
   return (
@@ -169,18 +170,18 @@ const UpdateItem = () => {
           )}
 
           <motion.div variants={itemVariants} className="space-y-2">
-            <label htmlFor="product_name" className="text-sm font-medium">Name</label>
+            <label htmlFor="product_name" className="text-sm font-medium">{t('Product Name')}</label>
             <input
               id="product_name"
               name="product_name"
               value={formData.product_name}
               onChange={handleChange}
               className="w-full p-3 border rounded-lg transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300"
-              placeholder="Enter product name" />
+              placeholder={t('Enter product name')} />
           </motion.div>
 
           <motion.div variants={itemVariants} className="space-y-2">
-            <label htmlFor="product_url" className="text-sm font-medium">Product URL</label>
+            <label htmlFor="product_url" className="text-sm font-medium">{t('Product URL')}</label>
             <input
               id="product_url"
               name="product_url"
@@ -193,7 +194,7 @@ const UpdateItem = () => {
 
           <motion.div variants={itemVariants} className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label htmlFor="current_price" className="text-sm font-medium">Current Price</label>
+              <label htmlFor="current_price" className="text-sm font-medium">{t('Current Price')}</label>
               <input
                 id="currentPrice"
                 name="current_price"
@@ -207,7 +208,7 @@ const UpdateItem = () => {
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="target_price" className="text-sm font-medium">Target Price</label>
+              <label htmlFor="target_price" className="text-sm font-medium">{t('Target Price')}</label>
               <input
                 id="target_price"
                 name="target_price"
@@ -224,7 +225,7 @@ const UpdateItem = () => {
 
           <motion.div variants={itemVariants} className="space-y-2">
             <label className="text-sm font-medium text-gray-700">
-              Category *
+              {t('Category')} *
             </label>
             <select
               name="category"
@@ -232,7 +233,7 @@ const UpdateItem = () => {
               onChange={handleChange}
               className='w-full p-3 border rounded-lg transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300'
             >
-              <option value="" disabled selected className='text-gray-400'>Select a category</option>
+              <option value="" disabled selected className='text-gray-400'>{t('Select a category')}</option>
               {categories.map(category => (
                 <option key={category} value={category}>{category}</option>
               ))}
@@ -241,7 +242,7 @@ const UpdateItem = () => {
 
           <motion.div variants={itemVariants} className="space-y-2">
             <label className="text-sm font-medium text-gray-700">
-              Priority *
+              {t('Priority')} *
             </label>
             <select
               name="priority"
@@ -249,7 +250,7 @@ const UpdateItem = () => {
               onChange={handleChange}
               className='w-full p-3 border rounded-lg transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300 '
             >
-              <option value="" disabled selected className='text-gray-400'>Select a priority</option>
+              <option value="" disabled selected className='text-gray-400'>{t('Select a priority')}</option>
               {priorities.map(priority => (
                 <option key={priority} value={priority}>{priority}</option>
               ))}
@@ -257,14 +258,14 @@ const UpdateItem = () => {
           </motion.div>
 
           <motion.div variants={itemVariants} className="space-y-2">
-            <label htmlFor="notes" className="text-sm font-medium">Notes</label>
+            <label htmlFor="notes" className="text-sm font-medium">{t('Notes (Optional)')}</label>
             <textarea
               id="notes"
               name="notes"
               value={formData.notes}
               onChange={handleChange}
               className="w-full p-3 border rounded-lg transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-blue-300"
-              placeholder="Add any additional notes here..."
+              placeholder={t('Add any additional notes here...')}
             />
           </motion.div>
 
@@ -279,7 +280,7 @@ const UpdateItem = () => {
               disabled={isSubmitting}
             >
               <Save className="w-4 h-4 mr-2" />
-              {isSubmitting ? 'Updating...' : 'Update Item'}
+              {isSubmitting ? t('Updating...') : t('Update Item')}
             </button>
           </motion.div>
         </form>

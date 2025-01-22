@@ -1,10 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState} from 'react'
 import { NavLink } from 'react-router-dom'
 import { supabase } from '../config/supabase'
 import { toast } from 'react-toastify'
 import Icon from '../img/santa-claus.png';
 import { useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next'
 
+
+
+const languages = [
+  { code: 'en', lang: 'English' },
+  { code: 'hi', lang: 'Hindi' },
+  {code: 'mar', lang: 'Marathi'}
+]
 
 
 const Navbar = () => {
@@ -14,6 +22,10 @@ const Navbar = () => {
   const [isLists, setIsLists] = React.useState(true);
   const [profile, setProfile] = useState(null);
   const location = useLocation();
+  const { t } = useTranslation();
+
+
+  const { i18n } = useTranslation();
 
   const handleLogout = async () => {
     try {
@@ -21,10 +33,10 @@ const Navbar = () => {
       await supabase.auth.signOut();
       localStorage.removeItem('sb-phijictojbnypvqnixkd-auth-token');
       window.location.href = '/';
-      toast.success('Logout successful');
+      toast.success(t('Logout successful'));
     } catch (error) {
       console.error('Error logging out:', error);
-      toast.error('Failed to logout');
+      toast.error(t('Failed to logout'));
     } finally {
       setLoading(false);
     }
@@ -40,30 +52,47 @@ const Navbar = () => {
     }
   };
 
+  const handleLanguageChange = (lng) => {
+    i18n.changeLanguage(lng);
+
+  };
+
   
+
+  const buttons = (
+    <select
+        className="w-32 px-3 py-2 border border-gray-300 rounded text-sm leading-4 font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
+        onChange={(e) => handleLanguageChange(e.target.value)}
+    >
+        <option value="" disabled selected className='text-gray-400'>{t('Select a language')}</option>
+        {languages.map((lng) => (
+            <option key={lng.code} value={lng.code}>{lng.lang}</option>
+        ))}
+    </select>
+);
+
+
 
 
   React.useEffect(() => {
-
-
     setIsHome(location.pathname === '/home');
     setIsLists(location.pathname === '/lists');
 
     fetchProfile();
   }, [location.pathname]);
-  
+
 
 
   return (
     <div className="bg-gray-800 text-white px-4 py-2 flex justify-between md:flex-row flex-col md:space-x-4 space-x-0">
 
-      <NavLink to="/lists" 
-       onClick={() => { setIsHome(false), setIsLists(true) }}
-       className="flex md:flex-row flex-col space-x-1 md:order-first order-last">
+      <NavLink to="/lists"
+        onClick={() => { setIsHome(false), setIsLists(true) }}
+        className="flex md:flex-row flex-col space-x-1 md:order-first order-last">
 
-        <img className="h-12 w-12 mr-2 flex items-center justify-center"  src={Icon} alt="img" />
-      
-        <h1 className="text-3xl font-bold italic  flex items-center justify-center">Wishlist Manager</h1>
+        <img className="h-12 w-12 mr-2 flex items-center justify-center" src={Icon} alt="img" />
+
+        <h1 className="text-3xl font-bold italic  flex items-center justify-center">{t('Wishlist Manager')}</h1>
       </NavLink>
 
 
@@ -78,7 +107,7 @@ const Navbar = () => {
               onClick={() => { setIsHome(true), setIsLists(false) }}
               className={`text-3xl font-bold cursor-pointer hover:color-gray-700 md:mr-8 ${isHome ? 'text-sky-400 underline' : ''}`}
             >
-              Home
+              {t('Home')}
 
             </li>
           </NavLink>
@@ -90,7 +119,7 @@ const Navbar = () => {
               className={`text-3xl font-bold cursor-pointer hover:color-blue-700 md:mr-8 ${isLists ? 'text-sky-400 underline' : ''}`}
             >
 
-              Lists
+              {t('Lists')}
 
             </li>
           </NavLink>
@@ -102,13 +131,14 @@ const Navbar = () => {
 
 
       <ul className="flex items-center justify-center space-x-4  md:flex-row flex-col md:mt-0 mt-4">
+        {buttons}
         <li className="italic">{profile?.email}</li>
 
         <li
           onClick={handleLogout}
           className="bg-gray-700 px-2 py-1 rounded-md cursor-pointer hover:bg-red-500 ">
 
-          {loading ? 'Logging out...' : 'Logout'}
+          {loading ? t('Logging out...') : t('Logout')}
 
         </li>
 

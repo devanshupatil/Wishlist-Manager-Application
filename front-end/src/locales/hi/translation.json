@@ -1,0 +1,59 @@
+{
+    "Product Name": "उत्पाद का नाम",
+    "Product URL": "उत्पाद URL",
+    "Current Price": "वर्तमान कीमत",
+    "Target Price": "लक्ष्य कीमत",
+    "Category": "श्रेणी",
+    "Priority": "प्राथमिकता",
+    "Notes (Optional)": "नोट्स (वैकल्पिक)",
+    "Add New Product": "नया उत्पाद जोड़ें",
+    "Adding": "जोड़ने में...",
+    "Select a category":"श्रेणी चुनें",
+    "Electronics":"इलेक्ट्रॉनिक्स",
+    "Clothing":"कपड़े",
+    "Home & Kitchen":"घर और रसोई",
+    "Books":"पुस्तकें",
+    "Other":"अन्य",
+    "Low":"निम्न",
+    "Medium":"मध्यम",
+    "High":"उच्च",
+    "Add any additional notes here...": "कृपया यहाँ किसी भी अतिरिक्त नोट्स जोड़ें...",
+    "Enter product name":"उत्पाद का नाम लिखें",
+    "Item added successfully":"आइटम सफलतापूर्वक जोड़ा गया",
+    "Failed to add item":"आइटम जोड़ने में विफल",
+    "Logout successful":"लॉगआउट सफल",
+    "Failed to logout":"लॉगआउट करने में विफल",
+    "Wishlist Manager":"इच्छा सूची प्रबंधक",
+    "Home":"होम",
+    "Lists":"सूचियाँ",
+    "Logout":"लॉगआउट",
+    "Logging out...":"लॉगआउट कर रहा हूँ...",
+    "Product deleted successfully":"उत्पाद सफलतापूर्वक हटा दिया गया",
+    "Failed to delete product":"उत्पाद हटाने में विफल",
+    "An error occurred while deleting the product":"उत्पाद हटाते समय कोई त्रुटि हुई",
+    "You Can By Now":"अब आप खरीद सकते हैं",
+    "Description":"वर्णन",
+    "Your Wishlist Items":"आपकी इच्छा सूची",
+    "Sort by Date":"तारीख के आधार पर सॉर्ट करें",
+    "Sort by Price":"कीमत के आधार पर सॉर्ट करें",
+    "Show All":"सभी दिखाएं",
+    "Show High Priority Only":"केवल उच्च प्राथमिकता दिखाएं",
+    "Show Medium Priority Only":"केवल मध्यम प्राथमिकता दिखाएं",
+    "Show Low Priority Only":"केवल निम्न प्राथमिकता दिखाएं",
+    "Add Item":"आइटम जोड़ें",
+    "You have no items in your wishlist, Please add some!":"आपकी इच्छा सूची में कोई आइटम नहीं हैं, कृपया कुछ आइटम जोड़ें!",
+    "No description available":"कोई वर्णन उपलब्ध नहीं है",
+    "Item updated successfully":"आइटम सफलतापूर्वक अद्यतन किया गया",
+    "Failed to update item":"आइटम अद्यतन करने में विफल",
+    "Select a priority":"प्राथमिकता चुनें",
+    "Updating...":"अद्यतन कर रहा हूँ...",
+    "Update Item":"आइटम अद्यतन करें"
+
+
+
+    
+
+
+    
+    
+}
