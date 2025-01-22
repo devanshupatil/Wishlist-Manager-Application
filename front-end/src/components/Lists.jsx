@@ -211,7 +211,7 @@ const Lists = () => {
             <div className="flex justify-between items-center mb-4">
                 <h5 className="text-xl font-semibold">Your Wishlist Items</h5>
             </div>
-            <div className="grid md:grid-cols-2 gap-4 mb-6 ">
+            <div className="grid md:grid-cols-2 gap-4 mb-6 sm:w-[379px]">
                 <input
                     type="text"
                     className="w-full px-3 py-2 border border-gray-300 rounded"
