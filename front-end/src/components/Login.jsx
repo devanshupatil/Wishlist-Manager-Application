@@ -41,16 +41,13 @@ const Login = () => {
 
   const handleGoogleLogin = async () => {
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
       });
 
       if (error) {
         toast.error('google login failed');
         console.error('google login error:', error);
-      } else if (data) {
-        // navigate('/lists', { replace: true });
-        toast.success('google login successful');
       }
     } catch (error) {
       console.error('Error with google login:', error);
