@@ -64,7 +64,7 @@ const Navbar = () => {
         className="cursor-pointer w-32 px-3 py-2 border border-gray-300 rounded text-sm leading-4 font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none  focus:ring-offset-2 focus:ring-offset-gray-100"
         onChange={(e) => handleLanguageChange(e.target.value)}
     >
-        <option value="" disabled selected className='text-gray-400'>{t('Select a language')}</option>
+        <option value="" disabled selected className='text-gray-400 cursor-pointer'>{t('Select a language')}</option>
         {languages.map((lng) => (
             <option key={lng.code} value={lng.code}>{lng.lang}</option>
         ))}
